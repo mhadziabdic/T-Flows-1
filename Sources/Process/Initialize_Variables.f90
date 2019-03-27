@@ -249,6 +249,15 @@
 
         if(heat_transfer) then
           vals(0) = t_def;  t % n(c) = vals(Key_Ind('T', keys, nks))
+          if(grid % zc(c) < 750) then
+            if(grid % wall_dist(c) < 100.0) then
+              t % n(c) = 200.0 * grid % vol(c)
+            else
+              t % n(c) = 200.0 * grid % vol(c) * (100.0/grid % wall_dist(c))**4
+            end if
+          else
+            t % n(c) = 10.0 * grid % vol(c)
+          end if
           t % o(c)  = t % n(c)
           t % oo(c) = t % n(c)
         end if
