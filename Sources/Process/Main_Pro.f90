@@ -163,6 +163,9 @@
   ! depending on how the code was compiled
   call Save_Results(flow, problem_name)
 
+  ! Read and interpolate roughness coef. map
+  call Roughness_Coefficient_Funtion(grid)
+
   do n = first_dt + 1, last_dt
 
     time = time + dt
