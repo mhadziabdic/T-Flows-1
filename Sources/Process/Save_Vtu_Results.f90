@@ -253,9 +253,9 @@
   if(turbulence_model .eq. K_EPS_ZETA_F .or.  &
      turbulence_model .eq. HYBRID_LES_RANS) then
     do c = 1, grid % n_cells
-      v2_calc(c) = kin % n(c) * zeta % n(c)
+      v2_calc(c) = 180.0*ATAN(flow % v % n(c) / flow % u % n(c))/3.14159
     end do
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityV2",   v2_calc (1))
+    call Save_Vtu_Scalar(grid, IN_4, IN_5, "Wind dir",   v2_calc (1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityZeta", zeta % n(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityF22",  f22  % n(1))
   end if
@@ -340,7 +340,8 @@
 
   ! Wall distance and delta, important for all models
   call Save_Vtu_Scalar(grid, IN_4, IN_5, "WallDistance", grid % wall_dist(1))
-  call Save_Vtu_Scalar(grid, IN_4, IN_5, "CellDelta",    grid % delta(1))
+  call Save_Vtu_Scalar(grid, IN_4, IN_5, "Elevation",    grid % zc(1))
+  if(rough_walls) call Save_Vtu_Scalar(grid, IN_4, IN_5, "Roughness",    z_o_f(1))
 
   !----------------------!
   !   Save user arrays   !
