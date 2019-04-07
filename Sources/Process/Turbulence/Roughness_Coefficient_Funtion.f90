@@ -53,7 +53,11 @@
 
   ! Read the z_o map file
   do k = 1, n_points
-    read(9,*) x_coord(k), y_coord(k), z_o_map(k)
+    read(9,*) x_coord(k), y_coord(k), z_coord(k), z_o_map(k)
+    x_coord(k) = x_coord(k) * 0.001  
+    y_coord(k) = y_coord(k) * 0.001  
+    z_coord(k) = z_coord(k) * 0.001  
+    z_o_map(k) = z_o_map(k) * 0.001
   end do
   close(9)
 

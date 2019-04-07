@@ -68,7 +68,7 @@
                             monitor % z(m),  &
                             grid % xc(c),    &
                             grid % yc(c),    &
-                            grid % zc(c))
+                            grid % wall_dist(c))
       ! Current distance is smaller than the stored one 
       if(curr_dist < min_dist(m)) then
         monitor % cell(m) = c
@@ -107,7 +107,7 @@
             '# Monitoring point:',         &
             grid % xc( monitor % cell(m) ),  &
             grid % yc( monitor % cell(m) ),  &
-            grid % zc( monitor % cell(m) )
+            grid % wall_dist( monitor % cell(m) )
 
     end if
 
