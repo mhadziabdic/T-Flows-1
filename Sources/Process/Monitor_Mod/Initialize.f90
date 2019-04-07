@@ -107,7 +107,7 @@
             '# Monitoring point:',         &
             grid % xc( monitor % cell(m) ),  &
             grid % yc( monitor % cell(m) ),  &
-            grid % zc( monitor % cell(m) )
+            grid % wall_dist( monitor % cell(m) )
 
     end if
 
