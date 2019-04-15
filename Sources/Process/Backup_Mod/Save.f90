@@ -11,10 +11,12 @@
   use Field_Mod, only: Field_Type, heat_transfer
   use Grid_Mod,  only: Grid_Type
   use Bulk_Mod,  only: Bulk_Type
+  use Control_Mod
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Field_Type), target :: fld
+  real                     :: comp_time, dt   ! total time of running
   integer                  :: time_step       ! current time step
   integer                  :: time_step_stat  ! starting step for statistics
   character(len=*)         :: name_save
@@ -63,6 +65,11 @@
 
   ! Time step
   call Backup_Mod_Write_Int(fh, d, vc, 'time_step', time_step)
+
+  ! Total time of computation
+  call Control_Mod_Time_Step(dt, verbose=.true.)
+  comp_time = time_step * dt
+  call Backup_Mod_Write_Real(fh, d, vc, 'time_comp', comp_time)
 
   ! Number of processors
   call Backup_Mod_Write_Int(fh, d, vc, 'n_proc', n_proc)
