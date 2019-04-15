@@ -14,7 +14,7 @@
   use Control_Mod
   use User_Mod
   use Work_Mod, only: v2_calc   => r_cell_01,  &
-                      uu_mean   => r_cell_02,  &
+                      pollutant => r_cell_02,  &
                       vv_mean   => r_cell_03,  &
                       ww_mean   => r_cell_04,  &
                       uv_mean   => r_cell_05,  &
@@ -245,8 +245,8 @@
      turbulence_model .eq. RSM_HANJALIC_JAKIRLIC  ) then
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergy", kin % n(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentDissipation",   eps % n(1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergyProduction", &
-                                           p_kin(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergyProduction", &
+!                                           p_kin(1))
   end if
 
   ! Save zeta and f22
@@ -265,8 +265,8 @@
 
   if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or. &
       (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer) ) then
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityT2", t2 % n(1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentT2Production", p_t2(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityT2", t2 % n(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentT2Production", p_t2(1))
   end if
   ! Save vis and vis_t
   if(turbulence_model .eq. DES_SPALART .or.  &
@@ -303,14 +303,14 @@
                                            flow % v % mean(1),  &
                                            flow % w % mean(1))
     do c = 1, grid % n_cells
-      uu_mean(c) = uu % mean(c) - flow % u % mean(c) * flow % u % mean(c)
+!      uu_mean(c) = uu % mean(c) - flow % u % mean(c) * flow % u % mean(c)
       vv_mean(c) = vv % mean(c) - flow % v % mean(c) * flow % v % mean(c)
       ww_mean(c) = ww % mean(c) - flow % w % mean(c) * flow % w % mean(c)
       uv_mean(c) = uv % mean(c) - flow % u % mean(c) * flow % v % mean(c)
       uw_mean(c) = uw % mean(c) - flow % u % mean(c) * flow % w % mean(c)
       vw_mean(c) = vw % mean(c) - flow % v % mean(c) * flow % w % mean(c)
     end do
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "ReynoldsStressXX", uu_mean(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "ReynoldsStressXX", uu_mean(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "ReynoldsStressYY", vv_mean(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "ReynoldsStressZZ", ww_mean(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "ReynoldsStressXY", uv_mean(1))
