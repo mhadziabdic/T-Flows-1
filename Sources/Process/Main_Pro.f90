@@ -111,7 +111,7 @@
   first_dt = 0
 
   ! Read backup file if directed so, and set the "backup" to .true. or .false.
-  call Backup_Mod_Load(flow, first_dt, n_stat, backup) 
+  call Backup_Mod_Load(flow, first_dt, n_stat, time, backup) 
 
   ! Initialize variables
   if(.not. backup) then
@@ -353,9 +353,9 @@
 
     ! Write the values in monitoring points
     if(.not. heat_transfer) then
-      call Monitor_Mod_Write_4_Vars(n, flow)
+      call Monitor_Mod_Write_4_Vars(n, time, flow)
     else
-      call Monitor_Mod_Write_5_Vars(n, flow)
+      call Monitor_Mod_Write_5_Vars(n, time, flow)
     end if
 
     ! Calculate mean values
