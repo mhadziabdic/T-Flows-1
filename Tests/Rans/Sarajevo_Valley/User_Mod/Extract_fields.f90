@@ -66,8 +66,9 @@
     c2 = grid % faces_c(2,s)
 
     if(grid % xc(c1) < 11.97 .and. grid % xc(c2) > 11.97) then
-      write (500+this_proc,'(7E17.7E3)') grid % xc(c1), grid % yc(c1),&
-          grid % zc(c1), U % n(c1), V % n(c1), W % n(c1), Kin % n(c1)
+      write (500+this_proc,'(10E17.7E3)') grid % yc(c1),&
+          grid % zc(c1), U % n(c1), V % n(c1), W % n(c1), Kin % n(c1),&
+          Eps % n(c1), f22 % n(c1), zeta % n(c1), 5.0
     end if     
                  
   end do
