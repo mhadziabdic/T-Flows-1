@@ -717,10 +717,6 @@
       end if
     end if
 
-    if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. INFLOW.and.heat_transfer) then
-      t % n(c2) = t % n(c2) * grid % vol(c1)
-    end if
-
   end do  ! faces
 
   end subroutine
