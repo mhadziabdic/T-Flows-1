@@ -124,6 +124,7 @@
     ! Hydraulic roughness given by formula
     if(rough_walls) then
       allocate(z_o_f(-grid % n_bnd_cells:grid % n_cells));  z_o_f   = 0.
+      allocate(c_o_f(-grid % n_bnd_cells:grid % n_cells));  c_o_f   = 0.
     end if
 
     if(heat_transfer) then
