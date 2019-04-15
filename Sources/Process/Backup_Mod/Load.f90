@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Backup_Mod_Load(fld, time_step, time_step_stat, backup)
+  subroutine Backup_Mod_Load(fld, time_step, time_step_stat, comp_time, backup)
 !------------------------------------------------------------------------------!
 !   Loads backup files name.backup                                             !
 !------------------------------------------------------------------------------!
@@ -15,6 +15,7 @@
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Field_Type), target :: fld
+  real                     :: comp_time       ! total time of running
   integer                  :: time_step       ! current time step
   integer                  :: time_step_stat  ! starting step for statistics
   logical                  :: backup, present
@@ -85,6 +86,10 @@
 
   ! Time step
   call Backup_Mod_Read_Int(fh, d, vc, 'time_step', time_step)
+
+  ! Total time of computation
+  call Backup_Mod_Read_Real(fh, d, vc, 'time_comp', comp_time)
+
 
   ! Bulk flows and pressure drops in each direction
   call Backup_Mod_Read_Real(fh, d, vc, 'bulk_flux_x',   bulk % flux_x)
