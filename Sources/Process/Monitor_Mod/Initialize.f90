@@ -109,6 +109,8 @@
             grid % yc( monitor % cell(m) ),  &
             grid % wall_dist( monitor % cell(m) )
 
+      write(10+m, '(a61)')         &
+            '# time_step, time (min), u, v, w, vel_mag, p, wind_dir, PM10'         
     end if
 
   end do
