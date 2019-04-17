@@ -103,10 +103,11 @@
         open(10+m, file = mon_file_name, position = 'append')
       endif
 
-      write(10+m, '(a24, 3f16.6)')         &
+      write(10+m, '(a24, 4f16.6)')         &
             '# Monitoring point:',         &
             grid % xc( monitor % cell(m) ),  &
             grid % yc( monitor % cell(m) ),  &
+            grid % zc( monitor % cell(m) ),  &
             grid % wall_dist( monitor % cell(m) )
 
       write(10+m, '(a61)')         &
