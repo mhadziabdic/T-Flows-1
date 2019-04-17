@@ -191,6 +191,7 @@
                       / (con_wall(c1) + TINY)
             heat_flux = heat_flux + t % q(c2) * grid % s(s)
             if(abs(t % q(c2)) > TINY) heated_area = heated_area + grid % s(s)
+            t % q(c2) = c_o_f(c1) * 277.8
           else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) then
             t % q(c2) = ( t % n(c2) - t % n(c1) ) * con_wall(c1)  &
                       / grid % wall_dist(c1)
