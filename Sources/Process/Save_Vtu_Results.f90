@@ -244,7 +244,7 @@
      turbulence_model .eq. RSM_MANCEAU_HANJALIC  .or.  &
      turbulence_model .eq. RSM_HANJALIC_JAKIRLIC  ) then
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergy", kin % n(1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentDissipation",   eps % n(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentDissipation",   eps % n(1))
 !    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergyProduction", &
 !                                           p_kin(1))
   end if
@@ -253,11 +253,12 @@
   if(turbulence_model .eq. K_EPS_ZETA_F .or.  &
      turbulence_model .eq. HYBRID_LES_RANS) then
     do c = 1, grid % n_cells
-      v2_calc(c) = 180.0*ATAN(flow % v % n(c) / flow % u % n(c))/3.14159
+      v2_calc(c) = 180.0*ATAN(flow % v % n(c)  &
+      / (flow % u % n(c) + tiny))/3.14159
     end do
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "Wind dir",   v2_calc (1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityZeta", zeta % n(1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityF22",  f22  % n(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityZeta", zeta % n(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityF22",  f22  % n(1))
   end if
   if(turbulence_model .eq. RSM_MANCEAU_HANJALIC) then
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityF22",  f22  % n(1))
@@ -335,7 +336,7 @@
 
   ! Save y+ for all turbulence models
   if(turbulence_model .ne. NONE) then
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityYplus", y_plus(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityYplus", y_plus(1))
   end if
 
   ! Wall distance and delta, important for all models
