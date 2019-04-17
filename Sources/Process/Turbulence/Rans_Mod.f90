@@ -40,9 +40,10 @@
   real,allocatable :: p_kin(:), p_t2(:)
 
   ! Hydraulic roughness (constant and variable)
-  real              :: z_o 
-  real, allocatable :: z_o_f(:)
-  real, allocatable :: c_o_f(:)
+  real                 :: z_o 
+  real, allocatable    :: z_o_f(:)
+  real, allocatable    :: c_o_f(:)
+  integer, allocatable :: id_zone(:)
 
   ! Buoyancy production for k-eps-zeta-f model
   ! (bouy_beta is only set to 1 and used as such.  Is it needed?)
