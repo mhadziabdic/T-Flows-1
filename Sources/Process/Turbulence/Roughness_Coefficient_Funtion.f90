@@ -16,13 +16,14 @@
 !---------------------------------[Arguments]----------------------------------!
   type(Grid_Type)  :: grid
 !-----------------------------------[Locals]-----------------------------------!
-  integer             :: k, s, c1, c2, n_points, nearest_cell, ID_zone
+  integer             :: k, s, c1, c2, n_points, nearest_cell 
   real                :: new_distance, old_distance
   real                :: Distance
   character(len=80)   :: z_o_map_name
   character(len=80)   :: store_name
   real,allocatable    :: x_coord(:), y_coord(:), z_coord(:)
   real,allocatable    :: z_o_map(:), c_o_map(:) 
+  integer,allocatable :: id_map(:)
   logical             :: there
 !==============================================================================!
 
@@ -39,7 +40,7 @@
       print *, '# No name.z_o file. Return                                     '
       print *, '#=============================================================='
     end if
-
+    
     return
   end if
 
@@ -53,30 +54,29 @@
   allocate(z_coord(n_points)); z_coord = 0.0
   allocate(z_o_map(n_points)); z_o_map = 0.0
   allocate(c_o_map(n_points)); c_o_map = 0.0
+  allocate(id_map(n_points));  id_map  = 0
 
   ! Read the z_o map file
   do k = 1, n_points
-    read(9,*) ID_zone, x_coord(k), y_coord(k), z_coord(k), z_o_map(k)
-    x_coord(k) = x_coord(k) * 0.001  
-    y_coord(k) = y_coord(k) * 0.001  
+    read(9,*) id_map(k), x_coord(k), y_coord(k), z_coord(k), z_o_map(k)
+    x_coord(k) = x_coord(k) * 0.001 - 0.284 
+    y_coord(k) = y_coord(k) * 0.001 - 0.136 
     z_coord(k) = z_coord(k) * 0.001  
     z_o_map(k) = z_o_map(k) * 0.001
-    if(ID_zone == 1) then
-      z_o_map(k) = 0.0000001 
+    if(id_map(k) == 1) then
       c_o_map(k) = 0.0
-    else if(ID_zone == 2) then
+    else if(id_map(k) == 2) then
       c_o_map(k) = 0.001
-    else if(ID_zone == 3) then
+    else if(id_map(k) == 3) then
       c_o_map(k) = 0.001
-    else if(ID_zone == 4) then
+    else if(id_map(k) == 4) then
       c_o_map(k) = 0.01
-    else if(ID_zone == 5) then
+    else if(id_map(k) == 5) then
       c_o_map(k) = 0.0
-    else if(ID_zone == 6) then
+    else if(id_map(k) == 6) then
       c_o_map(k) = 0.0
-    else if(ID_zone == 7) then
+    else if(id_map(k) == 7) then
       c_o_map(k) = 0.01
-      z_o_map(k) = 0.00001 
     end if
   end do
   close(9)
@@ -102,9 +102,7 @@
 
         z_o_f(c1) = z_o_map(nearest_cell)
         c_o_f(c1) = c_o_map(nearest_cell)
-    
-        t % q(c2) = c_o_f(c1) * 277.8
-
+        id_zone(c1) = id_map(nearest_cell)
       end if  
     end if  
   end do
@@ -114,6 +112,7 @@
   deallocate(z_coord)
   deallocate(z_o_map)
   deallocate(c_o_map)
+  deallocate(id_map)
 
   if(this_proc < 2)  write(6, *) '# Finished with Roughness_Coefficient_Funtion.f90'
 
