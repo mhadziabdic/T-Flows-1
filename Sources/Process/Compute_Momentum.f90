@@ -379,17 +379,17 @@
   if(buoyancy) then
     if(ui % name .eq. 'U') then
       do c = 1, grid % n_cells
-        b(c) = b(c) - density * grav_x * (t % n(c) - flow % t_ref)  &
+        b(c) = b(c) - density * grav_x * (t % n(c) - flow % t_ref_f(c))  &
              * grid % vol(c)
       end do
     else if(ui % name .eq. 'V') then
       do c = 1, grid % n_cells
-        b(c) = b(c) - density * grav_y * (t % n(c) - flow % t_ref)  &
+        b(c) = b(c) - density * grav_y * (t % n(c) - flow % t_ref_f(c))  &
              * grid % vol(c)
       end do
     else if(ui % name .eq. 'W') then
       do c = 1, grid % n_cells
-        b(c) = b(c) - density * grav_z * (t % n(c) - flow % t_ref)  &
+        b(c) = b(c) - density * grav_z * (t % n(c) - flow % t_ref_f(c))  &
              * grid % vol(c)
       end do
     end if
