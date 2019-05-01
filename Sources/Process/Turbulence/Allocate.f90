@@ -125,6 +125,8 @@
     if(rough_walls) then
       allocate(z_o_f(-grid % n_bnd_cells:grid % n_cells));  z_o_f   = -1.0
       allocate(c_o_f(-grid % n_bnd_cells:grid % n_cells));  c_o_f   = 0.
+      allocate(river_angle(-grid % n_bnd_cells:grid % n_cells));  &
+                                                      river_angle   = 0.
       allocate(id_zone(-grid % n_bnd_cells:grid % n_cells));id_zone = 0
     end if
 
