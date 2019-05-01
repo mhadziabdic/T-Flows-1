@@ -35,8 +35,17 @@
   !   Enthalpy conservation (temperature)   !
   !-----------------------------------------!
   if(heat_transfer) then
-    call Var_Mod_Allocate_Solution('T', 'Q', flow % t, grid)
+    call Var_Mod_Allocate_Solution('T', 'Q',   flow % t, grid)
   end if ! heat_transfer
+
+  !-----------------------------------------!
+  !   Variable referent temperatury         !  
+  !   (buoyancy)                            !
+  !-----------------------------------------!
+  if(buoyancy) then
+    allocate(flow % t_ref_f(-grid % n_bnd_cells:grid % n_cells));  &
+             flow % t_ref_f = 0.
+  end if ! buoyancy
 
   !--------------------------------------!
   !   Allocate memory for user scalars   !
