@@ -119,6 +119,9 @@
     call Comm_Mod_Wait
   end if
 
+  ! Initialze ref temperature and temperature for penetrative conv.
+  call Initialize_ref_and_initial_temperature(flow, backup) 
+
   ! Initialize monitoring points
   call Monitor_Mod_Initialize(grid, backup)
 
