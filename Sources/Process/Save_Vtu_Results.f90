@@ -230,7 +230,7 @@
   !   Temperature   !
   !-----------------!
   if(heat_transfer) then
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "Temperature", flow % t % n(1))
+    call Save_Vtu_Scalar(grid, IN_4, IN_5, "PM10", flow % t % n(1))
   end if
 
   !--------------------------!
