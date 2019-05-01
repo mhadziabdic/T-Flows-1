@@ -165,7 +165,8 @@
 
   ! Read and interpolate roughness coef. map
   call Roughness_Coefficient_Funtion(grid)
-
+  call Rivers_Interpolation(flow)
+  
   do n = first_dt + 1, last_dt
 
     time = time + dt
