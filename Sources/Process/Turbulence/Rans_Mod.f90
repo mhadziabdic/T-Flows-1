@@ -43,6 +43,7 @@
   real                 :: z_o 
   real, allocatable    :: z_o_f(:)
   real, allocatable    :: c_o_f(:)
+  real, allocatable    :: river_angle(:)
   integer, allocatable :: id_zone(:)
 
   ! Buoyancy production for k-eps-zeta-f model
