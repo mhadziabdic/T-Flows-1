@@ -44,6 +44,7 @@
 
     ! Reference temperature
     real :: t_ref
+    real, allocatable :: t_ref_f(:)
 
   end type
 
