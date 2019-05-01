@@ -57,18 +57,27 @@
   allocate(id_map(n_points));  id_map  = 0
 
   ! Read the z_o map file
+  ! Zone Sarajevo mesoscacle sa infrastrukturom:
+  ! 1 - Rijeke
+  ! 2 - Visoke zgrade 40m + 
+  ! 3 - Zgrade 15 - 40m 
+  ! 4 - Samostojeće kuće do 15m 
+  ! 5 - Livade i nisko rastinje
+  ! 6 - Šume 
+  ! 7 - Ceste
+
   do k = 1, n_points
     read(9,*) id_map(k), x_coord(k), y_coord(k), z_coord(k), z_o_map(k)
-    x_coord(k) = x_coord(k) * 0.001 - 0.284 
-    y_coord(k) = y_coord(k) * 0.001 - 0.136 
+    x_coord(k) = x_coord(k) * 0.001  
+    y_coord(k) = y_coord(k) * 0.001  
     z_coord(k) = z_coord(k) * 0.001  
     z_o_map(k) = z_o_map(k) * 0.001
     if(id_map(k) == 1) then
       c_o_map(k) = 0.0
     else if(id_map(k) == 2) then
-      c_o_map(k) = 0.001
+      c_o_map(k) = 0.0001
     else if(id_map(k) == 3) then
-      c_o_map(k) = 0.001
+      c_o_map(k) = 0.0001
     else if(id_map(k) == 4) then
       c_o_map(k) = 0.01
     else if(id_map(k) == 5) then
@@ -80,6 +89,8 @@
     end if
   end do
   close(9)
+
+
 
 
   nearest_cell = 0
