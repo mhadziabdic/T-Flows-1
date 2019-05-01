@@ -24,7 +24,7 @@
   character(len=*)         :: save_name
 !-----------------------------------[Locals]-----------------------------------!
   integer             :: n_prob, pl, c, i, count, s, c1, c2, n_points
-  character(len=80)   :: coord_name, res_name, res_name_plus
+  character(len=80)   :: coord_name, res_name
   character(len=80)   :: store_name
   real, allocatable   :: z_p(:), tz_p(:), ti_p(:), w_p(:), t_p(:),         &
                          y_plus_p(:),  ind(:),  wall_p(:), kin_p(:),       &
@@ -53,7 +53,7 @@
 
   ! Set some constants
   t_cold =  5.0
-  t_hot  = 15.0
+  t_hot  = 17.0
   t_diff =  t_hot - t_cold
 
   call Grad_Mod_Variable(t, .true.)
@@ -66,7 +66,6 @@
   problem_name = save_name
 
   call Name_File(0, res_name,      "-res.dat")
-  call Name_File(0, res_name_plus, "-res-plus.dat")
 
 !  call Grad_Mod_For_Phi(grid, t % n, 3, phi_z, .true.)
 
@@ -146,7 +145,7 @@
       if(grid % zc(c) > (z_p(i)) .and.  &
          grid % zc(c) < (z_p(i+1))) then
 
-        wall_p(i) = wall_p(i) + grid % zc(c)
+        wall_p(i) = wall_p(i) + 4 * grid % zc(c)/12.0
         tz_p  (i) = tz_p  (i) + t % z(c)
         ti_p  (i) = ti_p  (i) + t % n(c)
         w_p   (i) = w_p   (i) + w % mean(c)
@@ -247,13 +246,13 @@
       write(3,'(a1,(a12, f12.6))')'#', ' Nu number = ',  &
                tz_p(1) / (t_hot - t_cold)
       write(*,'(a1,(a12, f12.6))')'#', ' Nu number = ',  &
-               0.05*(t_hot-ti_p(1)+ti_p(n_prob-1)-t_cold) / wall_p(1)
+               tz_p(1) / (t_hot - t_cold)
     end if
     nu_max = tz_p(1)
   call Comm_Mod_Global_Sum_Real(nu_max)
   end if
 
-  write(i,'(a1,2x,a60)') '#', ' z,'                    //  &
+  write(3,'(a1,2x,a60)') '#', ' z,'                    //  &
                               ' u,'                    //  &
                               ' uu, vv, ww, uw'        //  &
                               ' kin'                   //  &
