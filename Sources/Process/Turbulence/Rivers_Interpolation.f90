@@ -46,7 +46,7 @@
   if(.not. there) then
     if(this_proc < 2) then
       print *, '#=============================================================='
-      print *, '# No name.z_o file. Return                                     '
+      print *, '# No name.riv file needed for river interpolation. Return      '
       print *, '#=============================================================='
     end if
     
