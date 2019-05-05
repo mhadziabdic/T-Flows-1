@@ -715,6 +715,9 @@
          Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL) then
         grid % cell_near_wall(c1) = .true.
       end if
+      if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. INFLOW ) then
+        u % n(c2) = max(u % n(c2), 0.001) 
+      end if
     end if
 
   end do  ! faces
