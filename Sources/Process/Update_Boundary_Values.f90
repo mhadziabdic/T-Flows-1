@@ -192,6 +192,9 @@
             heat_flux = heat_flux + t % q(c2) * grid % s(s)
             if(abs(t % q(c2)) > TINY) heated_area = heated_area + grid % s(s)
             t % q(c2) = c_o_f(c1) * 277.8
+!   1 sec of real time is 0.001 sec in simulation as t* = nu/U**2, U is the same
+!   c_o_f = 0.01 * 1000 mg / (km**2 * 3600 * 0.001) = 0.01 * 277.8
+!
           else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) then
             t % q(c2) = ( t % n(c2) - t % n(c1) ) * con_wall(c1)  &
                       / grid % wall_dist(c1)
