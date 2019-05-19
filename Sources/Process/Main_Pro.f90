@@ -26,7 +26,7 @@
 !---------------------------------[Calling]------------------------------------!
   real :: Correct_Velocity
 !----------------------------------[Locals]------------------------------------!
-  integer           :: n, sc
+  integer           :: n, sc, c
   real              :: mass_res, wall_time_start, wall_time_current
   character(len=80) :: name_save
   logical           :: backup, save_now, exit_now
@@ -111,7 +111,7 @@
   first_dt = 0
 
   ! Read backup file if directed so, and set the "backup" to .true. or .false.
-  call Backup_Mod_Load(flow, first_dt, n_stat, backup) 
+  call Backup_Mod_Load(flow, first_dt, n_stat, time, backup) 
 
   ! Initialize variables
   if(.not. backup) then
@@ -165,6 +165,25 @@
   ! It will save results in .vtk or .cgns file format,
   ! depending on how the code was compiled
   call Save_Results(flow, problem_name)
+
+!  do c = 1, grid % n_cells
+!    kin % n(c) = 0.01
+!    kin % o(c) = kin % n(c) 
+!    kin % oo(c)= kin % n(c) 
+!    eps % n(c) = 0.001
+!    eps % o(c) = eps % n(c) 
+!    eps % oo(c)= eps % n(c) 
+!    zeta % n(c) = 0.4
+!    zeta % o(c) = zeta % n(c) 
+!    zeta % oo(c)= zeta % n(c) 
+!    f22 % n(c) = 0.1
+!    f22 % o(c) = f22 % n(c) 
+!    f22 % oo(c)= f22 % n(c) 
+!    t2 % n(c) = 0.1
+!    t2 % o(c) = t2 % n(c) 
+!    t2 % oo(c)= t2 % n(c) 
+!  end do 
+  
 
   do n = first_dt + 1, last_dt
 
@@ -380,7 +399,7 @@
 
     ! Is it time to save the backup file?
     if(save_now .or. exit_now .or. mod(n, bsi) .eq. 0) then
-      call Backup_Mod_Save(flow, n, n_stat, name_save)
+      call Backup_Mod_Save(flow, n, n_stat, time, name_save)
     end if
 
     ! Is it time to save results for post-processing
@@ -419,7 +438,7 @@
   ! Save backup and post-processing files at exit
   call Comm_Mod_Wait
   call Save_Results(flow, name_save)
-  call Backup_Mod_Save(flow, n, n_stat, name_save)
+  call Backup_Mod_Save(flow, n, n_stat, time, name_save)
 
   ! Write results in user-customized format
   call User_Mod_Save_Results(flow, name_save)
