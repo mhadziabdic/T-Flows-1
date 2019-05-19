@@ -43,6 +43,8 @@
 
       if(heat_transfer) then
         t % n(c)  = 5.0 + 4.0 * grid % wall_dist(c)
+!        t % n(c)  = 5.0 + 4.0 * grid % wall_dist(c)
+!        t % n(c)  = 21.9 + 21.5 * grid % wall_dist(c)
         t % o(c)  = t % n(c)
         t % oo(c) = t % n(c)
       end if
@@ -51,10 +53,12 @@
 
   do c = 1, grid % n_cells
     if(heat_transfer) then
-      if(grid % wall_dist(c) < 0.2) then
-        flow % t_ref_f(c) = 5.0 + 4.0 * 0.2 
+      if(grid % wall_dist(c) < 1.0) then
+        flow % t_ref_f(c) = 5.0 + 4.0 * 1.0 
+!        flow % t_ref_f(c) = 21.9 + 21.5 * 1.0 
       else
         flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c) 
+!        flow % t_ref_f(c) = 21.9 + 21.5 * grid % wall_dist(c) 
       end if        
     end if
   end do ! through cells
