@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Backup_Mod_Save(fld, time_step, time_step_stat, name_save)
+  subroutine Backup_Mod_Save(fld, time_step, time_step_stat, run_time,name_save)
 !------------------------------------------------------------------------------!
 !   Saves backup files name.backup                                             !
 !------------------------------------------------------------------------------!
@@ -15,6 +15,7 @@
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Field_Type), target :: fld
+  real                     :: run_time        ! computation real-time
   integer                  :: time_step       ! current time step
   integer                  :: time_step_stat  ! starting step for statistics
   character(len=*)         :: name_save
@@ -63,6 +64,9 @@
 
   ! Time step
   call Backup_Mod_Write_Int(fh, d, vc, 'time_step', time_step)
+
+  ! Computation real-time 
+  call Backup_Mod_Write_Real(fh, d, vc, 'real_time', run_time)
 
   ! Number of processors
   call Backup_Mod_Write_Int(fh, d, vc, 'n_proc', n_proc)
