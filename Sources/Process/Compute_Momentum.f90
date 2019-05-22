@@ -286,6 +286,7 @@
       if((Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. INFLOW)  .or.  &
          (Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL)    .or.  &
          (Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. CONVECT) .or.  &
+         (Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE).or.  &
          (Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL)) then
          ! (Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. OUTFLOW) ) then
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
