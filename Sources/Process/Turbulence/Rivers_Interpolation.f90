@@ -85,6 +85,15 @@
     c1 = grid % faces_c(1,s)
     c2 = grid % faces_c(2,s)
     if(c2 < 0) then
+
+!      if( Grid_Mod_Bnd_Cond_Type(grid,c2) == INFLOW) then
+!        if(grid % yc(c2) > 13.27) then
+!          if(v % n(c2) > 0.0) then
+!            v % n(c2) = -0.3
+!          end if
+!        end if
+!      end if 
+
       if( Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL .or.  &
           Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL) then
         old_distance = HUGE
