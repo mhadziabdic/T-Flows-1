@@ -95,9 +95,10 @@
         g_buoy(c) = -buoy_beta(c) * (grav_x * ut % n(c) +  &
                                      grav_y * vt % n(c) +  &
                                      grav_z * wt % n(c)) * density
-        b(c) = b(c) + max(0.0, g_buoy(c) * grid % vol(c))
-        a % val(a % dia(c)) = a % val(a % dia(c))  &
-                  + max(0.0,-g_buoy(c) * grid % vol(c) / (kin % n(c) + TINY))
+
+        g_buoy(c) = max(g_buoy(c) ,0.0)    
+
+        b(c) = b(c) + g_buoy(c) * grid % vol(c)
       end if
     end do
   end if
