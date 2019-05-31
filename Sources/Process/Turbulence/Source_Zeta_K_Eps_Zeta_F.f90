@@ -55,8 +55,13 @@
                           + max(0.0, -f22 % n(c) * grid % vol(c) &
                           / (zeta % n(c) + TINY)) * density
     end if
+    
     a % val(a % dia(c)) =  a % val(a % dia(c))      &
                         + grid % vol(c) * p_kin(c)  &
+                        / (kin % n(c) + TINY) 
+    if(buoyancy)  &
+    a % val(a % dia(c)) =  a % val(a % dia(c))      &
+                        + grid % vol(c) * g_buoy(c)  &
                         / (kin % n(c) + TINY) 
   end do
 
