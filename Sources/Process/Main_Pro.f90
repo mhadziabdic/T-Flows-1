@@ -119,9 +119,6 @@
     call Comm_Mod_Wait
   end if
 
-  ! Initialze ref temperature and temperature for penetrative conv.
-  call Initialize_ref_and_initial_temperature(flow, backup) 
-
   ! Initialize monitoring points
   call Monitor_Mod_Initialize(grid, backup)
 
@@ -166,24 +163,11 @@
   ! depending on how the code was compiled
   call Save_Results(flow, problem_name)
 
-!  do c = 1, grid % n_cells
-!    kin % n(c) = 0.01
-!    kin % o(c) = kin % n(c) 
-!    kin % oo(c)= kin % n(c) 
-!    eps % n(c) = 0.001
-!    eps % o(c) = eps % n(c) 
-!    eps % oo(c)= eps % n(c) 
-!    zeta % n(c) = 0.4
-!    zeta % o(c) = zeta % n(c) 
-!    zeta % oo(c)= zeta % n(c) 
-!    f22 % n(c) = 0.1
-!    f22 % o(c) = f22 % n(c) 
-!    f22 % oo(c)= f22 % n(c) 
-!    t2 % n(c) = 0.1
-!    t2 % o(c) = t2 % n(c) 
-!    t2 % oo(c)= t2 % n(c) 
-!  end do 
-  
+  ! Initialze ref temperature and temperature for penetrative conv.
+  call Initialize_ref_and_initial_temperature(flow, backup, n) 
+
+  ! Initialze ref temperature and temperature for penetrative conv.
+  call Ini_turb_variables_buoyancy(flow, backup, n)
 
   do n = first_dt + 1, last_dt
 
@@ -191,6 +175,8 @@
 
     ! Beginning of time steo
     call User_Mod_Beginning_Of_Time_Step(flow, n, time)
+
+    if(mod(n,10) .eq. 0) call Ini_turb_variables_buoyancy(flow, backup, n)
 
     ! Start info boxes.
     call Info_Mod_Time_Start()
