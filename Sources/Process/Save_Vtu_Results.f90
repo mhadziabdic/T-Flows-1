@@ -266,7 +266,8 @@
   if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or. &
       (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer) ) then
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityT2", t2 % n(1))
-    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentT2Production", p_t2(1))
+    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentBuoyancyProduction", g_buoy(1))
+!    call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentT2Production", p_t2(1))
   end if
   ! Save vis and vis_t
   if(turbulence_model .eq. DES_SPALART .or.  &
