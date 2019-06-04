@@ -190,14 +190,18 @@
                      + wt_log_law * exp(-1.0 / EBF)
     
           if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) &
-          t % q(c2) = abs(con_wall(c1)*(t % n(c1) - t % n(c2))/grid % wall_dist(c1))
+          t % q(c2) = abs(con_wall(c1)*(t % n(c1) &
+                      - t % n(c2))/grid % wall_dist(c1))
           g_buoy_wall = abs(grav_z)*sqrt(t % q(c2)*  &
                         0.35*sqrt(abs(t2 % n(c1) * kin % n(c1)))) 
 
-          ! Here we clean up b(c) from old values of g_buoy         
+          ! Clean up b(c) from old values of g_buoy         
           b(c1)      = b(c1) - g_buoy(c1) * grid % vol(c1)
 
-          g_buoy(c1) = g_buoy(c1) * exp(-1.0 * EBF) + g_buoy_wall * exp(-1.0 / EBF)
+          g_buoy(c1) = g_buoy(c1) * exp(-1.0 * EBF) &
+                     + g_buoy_wall * exp(-1.0 / EBF)
+
+          ! Add new values of g_buoy based on wall function approach          
           b(c1)      = b(c1) + g_buoy(c1) * grid % vol(c1)
         end if         
       end if  ! Grid_Mod_Bnd_Cond_Type(grid,c2).eq.WALL or WALLFL
