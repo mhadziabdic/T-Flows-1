@@ -96,7 +96,7 @@
                                      grav_y * vt % n(c) +  &
                                      grav_z * wt % n(c)) * density
 
-        g_buoy(c) = max(g_buoy(c) ,0.0)    
+        g_buoy(c) = max(g_buoy(c) , 0.0)    
 
         b(c) = b(c) + g_buoy(c) * grid % vol(c)
       end if
