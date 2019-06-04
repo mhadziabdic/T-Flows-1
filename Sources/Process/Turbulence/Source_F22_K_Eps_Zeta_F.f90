@@ -62,7 +62,7 @@
            / (eps  % n(c) + TINY))                  &
            * (zeta % n(c) - TWO_THIRDS)             &
            / (t_scale(c) + TINY)                    &
-           + 0.0085 * (g_buoy(c)/density) / (kin % n(c) + TINY)
+           + 0.0085 * g_buoy(c)/density / (kin % n(c) + TINY)
    end if
    b(c) = b(c) + f22hg * grid % vol(c) / (l_scale(c)**2 + TINY)
  end do
