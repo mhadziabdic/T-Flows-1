@@ -73,7 +73,7 @@
  
   do c = 1, grid % n_cells
     if(heat_transfer) then
-      flow % t_ref_f(c) = max(9.0, 5.0 + 4.0 * grid % wall_dist(c))
+      flow % t_ref_f(c) = max(t_wall, 5.0 + 4.0 * grid % wall_dist(c))
     end if
   end do ! through cells
 
