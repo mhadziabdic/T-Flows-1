@@ -83,12 +83,16 @@
       if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL .or. &
          Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL) then
 
-        y_plus(c1) = Y_Plus_Low_Re(u_tau(c1), grid % wall_dist(c1), kin_vis)
+        y_plus(c1) = Y_Plus_Low_Re(u_tau(c1),           &
+                     grid % wall_dist(c1), kin_vis)
 
         EBF  = 0.01*y_plus(c1)**4.0/(1.0+5.0*y_plus(c1))
 
-        t % q(c2) = abs(con_wall(c1)*(t % n(c1) - t % n(c2))/grid % wall_dist(c1))
-        p_t2_wall  = t % q(c2)*0.35*sqrt(abs(t2 % n(c1)))/(0.38*0.5477*grid % wall_dist(c1))
+        t % q(c2) = abs(con_wall(c1)*(t % n(c1) &
+                    - t % n(c2))/grid % wall_dist(c1))
+
+        p_t2_wall  = t % q(c2)*0.35*sqrt(abs(t2 % n(c1))) &
+                     /(0.38*0.5477*grid % wall_dist(c1))
 
         b(c1) = b(c1) - 2.0 * p_t2(c1) * grid % vol(c1)
 
@@ -96,7 +100,7 @@
           b(c1) = b(c1) + 2.0*p_t2_wall * grid % vol(c1)
         else  
           b(c1) = b(c1) + 2.0*(p_t2(c1) * exp(-1.0 * EBF) + & 
-                      p_t2_wall * exp(-1.0/EBF)) * grid % vol(c1)
+                  p_t2_wall * exp(-1.0/EBF)) * grid % vol(c1)
         end if
 
         t2 % n(c2) = 0.0 
