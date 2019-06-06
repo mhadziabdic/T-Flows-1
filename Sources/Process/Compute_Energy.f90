@@ -239,8 +239,13 @@
     else if(c2.lt.0) then
       ! Outflow is included because of the flux 
       ! corrections which also affects velocities
+<<<<<<< HEAD
       if( (Var_Mod_Bnd_Cell_Type(t, c2) .eq. INFLOW) .or.  &
           (Var_Mod_Bnd_Cell_Type(t, c2) .eq. WALL)   .or.  &
+=======
+      if( (Var_Mod_Bnd_Cell_Type(t, c2) .eq. INFLOW)  .or.  &
+          (Var_Mod_Bnd_Cell_Type(t, c2) .eq. WALL)    .or.  &
+>>>>>>> 7c04da923a44bc5579199a0bcff76c3102ae8e3f
           (Var_Mod_Bnd_Cell_Type(t, c2) .eq. PRESSURE).or.  &
           (Var_Mod_Bnd_Cell_Type(t, c2) .eq. CONVECT) ) then
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12

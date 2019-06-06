@@ -185,14 +185,18 @@
     call Backup_Mod_Read_Cell_Bnd(fh, d, vc, 't_scale',  t_scale (-nb_s:nc_s))
     call Backup_Mod_Read_Cell_Bnd(fh, d, vc, 'l_scale',  l_scale (-nb_s:nc_s))
 
-    ! Turbulence quantities connected with heat transfer
   end if
 
   if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or. &
       (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer) ) then
+    ! Turbulence quantities connected with heat transfer
     call Backup_Mod_Read_Variable(fh, d, vc, 't2',       t2)
     call Backup_Mod_Read_Cell_Bnd(fh, d, vc, 'p_t2',     p_t2    (-nb_s:nc_s))
     call Backup_Mod_Read_Cell_Bnd(fh, d, vc, 'con_wall', con_wall(-nb_s:nc_s))
+    if(turbulence_statistics .and.  &
+       time_step > time_step_stat) then
+      call Backup_Mod_Read_Variable_Mean(fh, d, vc, 't2_mean', t2)
+    end if 
   end if
 
   !----------------------------!
