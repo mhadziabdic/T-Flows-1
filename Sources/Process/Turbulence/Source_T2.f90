@@ -51,7 +51,9 @@
   a    => sol % a
   b    => sol % b % val
 
-  call Grad_Mod_Array(grid, t % n, t % x, t % y, t % z, .true.)
+  call Grad_Mod_Array(grid, t  % n, t  % x, t  % y, t  % z, .true.)
+  call Grad_Mod_Array(grid, t2 % n, t2 % x, t2 % y, t2 % z, .true.)
+
 
   !-----------------------------------------!
   !   Compute the sources in all the cells  !
@@ -88,6 +90,7 @@
 
         EBF  = 0.01*y_plus(c1)**4.0/(1.0+5.0*y_plus(c1))
 
+        if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) &
         t % q(c2) = abs(con_wall(c1)*(t % n(c1) &
                     - t % n(c2))/grid % wall_dist(c1))
 
@@ -103,7 +106,14 @@
                   p_t2_wall * exp(-1.0/EBF)) * grid % vol(c1)
         end if
 
-        t2 % n(c2) = 0.0 
+        if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) then
+          t2 % n(c2) = 0.0
+        else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq.WALLFL) then
+          t2 % n(c2) = t2 % n(c1) + t2 % x(c1) * grid % dx(s) &
+                                  + t2 % y(c1) * grid % dy(s) &
+                                  + t2 % z(c1) * grid % dz(s)
+        end if
+ 
       end if  ! Grid_Mod_Bnd_Cond_Type(grid,c2).eq.WALL or WALLFL
     end if    ! c2 < 0
   end do
