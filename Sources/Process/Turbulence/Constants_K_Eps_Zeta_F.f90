@@ -34,4 +34,5 @@
   zeta % sigma = 1.2
   t2   % sigma = 1.1
 
+  z_inv = 0.4
   end subroutine
