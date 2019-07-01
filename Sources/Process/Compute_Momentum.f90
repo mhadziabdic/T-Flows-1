@@ -18,6 +18,7 @@
   use Solver_Mod,   only: Solver_Type, Bicg, Cg, Cgs
   use Matrix_Mod,   only: Matrix_Type
   use User_Mod
+  use Work_Mod,     only: vis_false     => r_cell_01
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
@@ -136,6 +137,14 @@
   b      (:) = 0.0
   f_stress   = 0.0
 
+  do c = 1, grid % n_cells
+    if(grid % wall_dist(c) > z_inv) then
+      vis_false(c) = 60.0 * viscosity
+    else
+      vis_false(c) = 0.0
+    end if
+  end do
+
   ! User function
   call User_Mod_Beginning_Of_Compute_Momentum(flow, dt, ini)
 
@@ -185,7 +194,8 @@
 
     if(turbulence_model .ne. NONE .and.  &
        turbulence_model .ne. DNS) then
-      vis_eff = vis_eff + grid % fw(s)*vis_t(c1)+(1.0-grid % fw(s))*vis_t(c2)
+      vis_eff = vis_eff + grid % fw(s)*(vis_t(c1) + vis_false(c1))&
+      + (1.0-grid % fw(s))*(vis_t(c2) + vis_false(c2))
     end if
 
     if(turbulence_model .eq. HYBRID_LES_RANS) then
@@ -330,6 +340,36 @@
       end do
     end if
   end if
+
+      do s = 1, grid % n_faces
+        c1 = grid % faces_c(1,s)
+        c2 = grid % faces_c(2,s)
+
+        vis_tS = (grid % fw(s)*vis_false(c1)+(1.0-grid % fw(s))*vis_false(c2))
+        a0 = a % fc(s)*vis_tS
+        vis_eff = vis_tS
+
+        ui_i_f = grid % fw(s) * ui_i(c1) + (1.0-grid % fw(s)) * ui_i(c2)
+        ui_j_f = grid % fw(s) * ui_j(c1) + (1.0-grid % fw(s)) * ui_j(c2)
+        ui_k_f = grid % fw(s) * ui_k(c1) + (1.0-grid % fw(s)) * ui_k(c2)
+        uj_i_f = grid % fw(s) * uj_i(c1) + (1.0-grid % fw(s)) * uj_i(c2)
+        uk_i_f = grid % fw(s) * uk_i(c1) + (1.0-grid % fw(s)) * uk_i(c2)
+
+        f_ex = vis_eff*( 2.0*ui_i_f         * si(s) &
+                          + (ui_j_f+uj_i_f) * sj(s) &
+                          + (ui_k_f+uk_i_f) * sk(s) )
+
+        f_im = (  ui_i_f * di(s)  &
+                + ui_j_f * dj(s)  &
+                + ui_k_f * dk(s)) * vis_eff * a % fc(s)
+
+        b(c1) = b(c1) - vis_eff * (ui % n(c2) -ui % n(c1)) * a % fc(s)  &
+              - f_ex + f_im
+        if(c2  > 0) then
+          b(c2) = b(c2) + vis_eff * (ui % n(c2) -ui % n(c1)) * a % fc(s)  &
+                + f_ex - f_im
+        end if
+      end do
 
   ! Explicit treatment for cross diffusion terms
   do c = 1, grid % n_cells
