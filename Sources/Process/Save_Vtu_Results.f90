@@ -247,13 +247,14 @@
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentDissipation",   eps % n(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentKineticEnergyProduction", &
                                            p_kin(1))
+    if(buoyancy) call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentBuoyancyProduction", g_buoy(1))
   end if
 
   ! Save zeta and f22
   if(turbulence_model .eq. K_EPS_ZETA_F .or.  &
      turbulence_model .eq. HYBRID_LES_RANS) then
     do c = 1, grid % n_cells
-      v2_calc(c) = kin % n(c) * zeta % n(c)
+      v2_calc(c) = t_scale(c) !kin % n(c) * zeta % n(c)
     end do
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityV2",   v2_calc (1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityZeta", zeta % n(1))
@@ -266,7 +267,6 @@
   if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or. &
       (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer) ) then
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentQuantityT2", t2 % n(1))
-    if(buoyancy) call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentBuoyancyProduction", g_buoy(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxX", ut % n(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxY", vt % n(1))
     call Save_Vtu_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxZ", wt % n(1))
