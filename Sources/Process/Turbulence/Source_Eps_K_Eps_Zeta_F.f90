@@ -68,17 +68,14 @@
   do c = 1, grid % n_cells 
     e_sor = grid % vol(c)/(t_scale(c)+TINY)
     c_11e = c_1e*(1.0 + alpha * ( 1.0/(zeta % n(c)+TINY) ))
-    b(c) = b(c) + c_11e * e_sor * p_kin(c)
+
+!    b(c) = b(c) + c_11e * e_sor * p_kin(c)
 
     ! Fill in a diagonal of coefficient matrix
     a % val(a % dia(c)) =  a % val(a % dia(c)) + c_2e * e_sor * density
 
-    ! Add buoyancy (linearly split) to eps equation as required in the t2 model
-    if(buoyancy) then
-      b(c) = b(c) + max(0.0, c_11e * e_sor * g_buoy(c))
-      a % val(a % dia(c)) = a % val(a % dia(c))  &
-              + max(0.0,-c_11e * e_sor * g_buoy(c) / (eps % n(c) + TINY))
-    end if
+    ! Add buoyancy to eps equation 
+    b(c) = b(c) + c_11e * e_sor * max(p_kin(c)+g_buoy(c),0.0)
   end do
 
   !-------------------------------------------------------!
