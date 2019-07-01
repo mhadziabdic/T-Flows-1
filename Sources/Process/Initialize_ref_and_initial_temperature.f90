@@ -72,11 +72,8 @@
 
 !  if(this_proc < 2) write(*,*) 'Twall = ', t_wall
 ! 
-!  do c = 1, grid % n_cells
-!    if(heat_transfer) then
-!!      flow % t_ref_f(c) = max(t_wall, 5.0 + 4.0 * grid % wall_dist(c))
-!      flow % t_ref_f(c) = t_wall
-!    end if
-!  end do ! through cells
+  do c = 1, grid % n_cells
+    flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c)
+  end do ! through cells
 
   end subroutine
