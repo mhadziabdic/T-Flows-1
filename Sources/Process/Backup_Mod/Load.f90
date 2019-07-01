@@ -187,8 +187,9 @@
 
   end if
 
-  if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or. &
-      (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer) ) then
+  if( (turbulence_model .eq. K_EPS_ZETA_F .and. heat_transfer) .or.   &
+      (turbulence_model .eq. HYBRID_LES_RANS .and. heat_transfer).or. &
+      (turbulence_model .eq. K_EPS .and. heat_transfer) ) then
     ! Turbulence quantities connected with heat transfer
     call Backup_Mod_Read_Variable(fh, d, vc, 't2',       t2)
     call Backup_Mod_Read_Cell_Bnd(fh, d, vc, 'p_t2',     p_t2    (-nb_s:nc_s))
