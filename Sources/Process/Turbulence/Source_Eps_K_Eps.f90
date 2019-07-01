@@ -35,7 +35,7 @@
   integer                    :: s, c, c1, c2, j
   real                       :: u_tan, u_nor_sq, u_nor, u_tot_sq
   real                       :: re_t, f_mu, u_tau_new, fa, kin_vis
-  real                       :: eps_wf, eps_int, y_star
+  real                       :: eps_wf, eps_int, y_star, time_scale
 !==============================================================================!
 !   Dimensions:                                                                !
 !                                                                              !
@@ -61,9 +61,11 @@
   kin_vis = viscosity/density
 
   do c = 1, grid % n_cells
+    time_scale = min(kin % n(c)/(eps % n(c)+tiny),0.6/(sqrt(6.0)*c_mu*shear(c))) 
     ! Positive contribution:
     b(c) = b(c) + &
-            c_1e * p_kin(c) * eps % n(c)/kin % n(c) * grid % vol(c)
+            c_1e * p_kin(c) /time_scale * grid % vol(c)
+!            c_1e * p_kin(c) * eps % n(c)/kin % n(c) * grid % vol(c)
 
     ! Negative contribution:
     re_t = kin % n(c)*kin % n(c)/(kin_vis*eps % n(c))
@@ -75,17 +77,18 @@
     f_mu = min(f_mu,1.0)
 
     a % val(a % dia(c)) = a % val(a % dia(c)) &
-     + density * f_mu* c_2e * eps % n(c) / kin % n(c) * grid % vol(c)
+     + density * f_mu* c_2e / time_scale * grid % vol(c)
+!     + density * f_mu* c_2e * eps % n(c) / kin % n(c) * grid % vol(c)
  
 
     ! Buoyancy contribution
-    if(buoyancy) then
-      b(c) = b(c) + max(0.0, c_1e * g_buoy(c) &
-                    * eps % n(c) / kin % n(c) * grid % vol(c))
-      a % val(a % dia(c)) = a % val(a % dia(c))  &
-                + max(0.0,(-c_1e * g_buoy(c) &
-                * eps % n(c) / kin % n(c) * grid % vol(c)) / (eps % n(c) + TINY))
-    end if
+!    if(buoyancy) then
+!      b(c) = b(c) + max(0.0, c_1e * g_buoy(c) &
+!                    * eps % n(c) / kin % n(c) * grid % vol(c))
+!      a % val(a % dia(c)) = a % val(a % dia(c))  &
+!                + max(0.0,(-c_1e * g_buoy(c) &
+!                * eps % n(c) / kin % n(c) * grid % vol(c)) / (eps % n(c) + TINY))
+!    end if
 
   end do
 
