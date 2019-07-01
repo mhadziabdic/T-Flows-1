@@ -164,10 +164,10 @@
   call Save_Results(flow, problem_name)
 
   ! Initialze ref temperature and temperature for penetrative conv.
-!  call Initialize_ref_and_initial_temperature(flow, backup, n) 
+  call Initialize_ref_and_initial_temperature(flow, backup, n) 
 
   ! Initialze ref temperature and temperature for penetrative conv.
-!  call Ini_turb_variables_buoyancy(flow, backup, n)
+  call Ini_turb_variables_buoyancy(flow, backup, n)
 
   do n = first_dt + 1, last_dt
 
@@ -176,7 +176,7 @@
     ! Beginning of time steo
     call User_Mod_Beginning_Of_Time_Step(flow, n, time)
 
-!    if(mod(n,10) .eq. 0) call Ini_turb_variables_buoyancy(flow, backup, n)
+    if(mod(n,100) .eq. 0) call Ini_turb_variables_buoyancy(flow, backup, n)
 
     ! Start info boxes.
     call Info_Mod_Time_Start()
@@ -266,6 +266,11 @@
 
         call Compute_Turbulent(flow, sol, dt, ini, kin, n)
         call Compute_Turbulent(flow, sol, dt, ini, eps, n)
+
+        if(heat_transfer) then
+          call Calculate_Heat_Flux(flow)
+!          call Compute_Turbulent(flow, sol, dt, ini, t2,  n)
+        end if
 
         call Calculate_Vis_T_K_Eps(flow)
 
