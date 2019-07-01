@@ -68,7 +68,6 @@
       if( Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. wallfl ) then
         t_wall = t_wall + t % n(c2)
         n_wall = n_wall + 1 
-        t % q(c2) = 0.007
       end if
     end if
   end do
@@ -98,13 +97,13 @@
   vis_t_sum  = vis_t_sum /n_vis 
 
   if(this_proc < 2) write(*,*) 'Twall = ', t_wall
-  if(this_proc < 2) write(*,*) 'Tref  = ', t_ref
+  if(this_proc < 2) write(*,*) 'Tref  = ', (t_ref+t_wall)*0.5
   if(this_proc < 2) write(*,*) 'z_inv = ', z_inv
   if(this_proc < 2) write(*,*) 'vis_t_sum = ', vis_t_sum
  
   do c = 1, grid % n_cells
     if(heat_transfer) then
-      flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c)
+      flow % t_ref_f(c) = max((t_ref+t_wall)*0.5,5.0 + 4.0 * grid % wall_dist(c))
 !      flow % t_ref_f(c) = (t_wall, 5.0 + 4.0 * grid % wall_dist(c))
 !      if(grid % wall_dist(c) > 0.32) then
 !        w % n(c) = 0.0
@@ -114,22 +113,40 @@
     end if
   end do ! through cells
 
-  if(time_step == 1240000000) then
+  if(time_step == 300) then
     do c = 1, grid % n_cells
-      if(grid % wall_dist(c) > 0.2) then
-        kin % n(c) = 0.001
+      if(grid % wall_dist(c) < 0.25) then
+        kin % n(c) = 0.003
         kin % o(c) = kin % n(c) 
         kin % oo(c)= kin % n(c) 
         eps % n(c) = 0.0001
         eps % o(c) = eps % n(c) 
         eps % oo(c)= eps % n(c) 
-!        zeta % n(c) = 0.01 
-!        zeta % o(c) = zeta % n(c) 
-!        zeta % oo(c)= zeta % n(c) 
-!        f22 % n(c) = 0.01
-!        f22 % o(c) = f22 % n(c) 
-!        f22 % oo(c)= f22 % n(c) 
-!        vis_t(c)   = viscosity
+        if(turbulence_model .eq. K_EPS_ZETA_F) then 
+          zeta % n(c) = 0.1 
+          zeta % o(c) = zeta % n(c) 
+          zeta % oo(c)= zeta % n(c) 
+          f22 % n(c) = 0.1
+          f22 % o(c) = f22 % n(c) 
+          f22 % oo(c)= f22 % n(c) 
+        end if
+      else
+        kin % n(c) = 0.00001
+        kin % o(c) = kin % n(c) 
+        kin % oo(c)= kin % n(c) 
+        eps % n(c) = 0.00001
+        eps % o(c) = eps % n(c) 
+        eps % oo(c)= eps % n(c) 
+        if(turbulence_model .eq. K_EPS_ZETA_F) then 
+          zeta % n(c) = 0.01 
+          zeta % o(c) = zeta % n(c) 
+          zeta % oo(c)= zeta % n(c) 
+          f22 % n(c) = 0.01
+          f22 % o(c) = f22 % n(c) 
+          f22 % oo(c)= f22 % n(c) 
+        end if
+      end if
+!       vis_t(c)   = viscosity
 !        u % n(c) = 0.0
 !        u % o(c) = u % n(c) 
 !        u % oo(c)= u % n(c) 
@@ -139,10 +156,11 @@
 !        w % n(c) = 0.0
 !        w % o(c) = w % n(c) 
 !        w % oo(c)= w % n(c) 
+!      if(grid % wall_dist(c) > z_inv) then
 !        t % n(c)  = 5.0 + 4.0 * grid % wall_dist(c)
 !        t % o(c)  = t % n(c)
 !        t % oo(c) = t % n(c)
-      end if
+!      end if
     end do
   end if
   if(time_step < 1) then
@@ -154,12 +172,12 @@
         eps % n(c) = 0.0001
         eps % o(c) = eps % n(c) 
         eps % oo(c)= eps % n(c) 
-!        zeta % n(c) = 0.1 
-!        zeta % o(c) = zeta % n(c) 
-!        zeta % oo(c)= zeta % n(c) 
-!        f22 % n(c) = 0.01
-!        f22 % o(c) = f22 % n(c) 
-!        f22 % oo(c)= f22 % n(c) 
+        zeta % n(c) = 0.1 
+        zeta % o(c) = zeta % n(c) 
+        zeta % oo(c)= zeta % n(c) 
+        f22 % n(c) = 0.01
+        f22 % o(c) = f22 % n(c) 
+        f22 % oo(c)= f22 % n(c) 
       else
         kin % n(c) = 0.0000001
         kin % o(c) = kin % n(c) 
@@ -167,12 +185,14 @@
         eps % n(c) = 0.001
         eps % o(c) = eps % n(c) 
         eps % oo(c)= eps % n(c) 
-!        zeta % n(c) = 0.0001 
-!        zeta % o(c) = zeta % n(c) 
-!        zeta % oo(c)= zeta % n(c) 
-!        f22 % n(c) = 0.01
-!        f22 % o(c) = f22 % n(c) 
-!        f22 % oo(c)= f22 % n(c) 
+        if(turbulence_model .eq. K_EPS_ZETA_F) then 
+          zeta % n(c) = 0.001 
+          zeta % o(c) = zeta % n(c) 
+          zeta % oo(c)= zeta % n(c) 
+        end if
+        f22 % n(c) = 0.01
+        f22 % o(c) = f22 % n(c) 
+        f22 % oo(c)= f22 % n(c) 
       end if 
     end do 
   end if
