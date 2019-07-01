@@ -23,13 +23,15 @@
   real :: Roughness_Coefficient
 !-----------------------------------[Locals]-----------------------------------!
   type(Grid_Type),   pointer :: grid
-  type(Var_Type),    pointer :: u, v, w
+  type(Var_Type),    pointer :: u, v, w, t
   type(Matrix_Type), pointer :: a
   real,              pointer :: b(:)
   integer                    :: c, c1, c2, s
   real                       :: u_tot2, u_nor, u_nor2, u_tan
   real                       :: kin_vis  ! [m^2/s]
   real                       :: ebf, p_kin_int, p_kin_wf
+  real                       :: nx, ny, nz, qx, qy, qz, g_buoy_wall
+  real                       :: ut_log_law, vt_log_law, wt_log_law
 !==============================================================================!
 !   Dimensions:                                                                !
 !                                                                              !
@@ -49,6 +51,7 @@
   u    => flow % u
   v    => flow % v
   w    => flow % w
+  t    => flow % t
   a    => sol % a
   b    => sol % b % val
 
@@ -68,7 +71,7 @@
       g_buoy(c) = -buoy_beta(c) * (grav_x * ut % n(c) +  &
                                    grav_y * vt % n(c) +  &
                                    grav_z * wt % n(c)) * density
-      g_buoy(c) = max(g_buoy(c),0.0)
+!      g_buoy(c) = max(g_buoy(c),0.0)
       b(c) = b(c) + g_buoy(c) * grid % vol(c)
     end if
   end do
@@ -137,6 +140,43 @@
 
           b(c1) = b(c1) + (p_kin(c1) - p_kin_int) * grid % vol(c1)
         end if  ! rough_walls
+        if(buoyancy) then
+          nx = grid % sx(s) / grid % s(s)
+          ny = grid % sy(s) / grid % s(s)
+          nz = grid % sz(s) / grid % s(s)
+          qx = t % q(c2) * nx
+          qy = t % q(c2) * ny
+          qz = t % q(c2) * nz
+
+          ut_log_law = - con_wall(c1) &
+                     * (t % n(c2) - t % n(c1))/grid % wall_dist(c1) * nx
+          vt_log_law = - con_wall(c1) &
+                     * (t % n(c2) - t % n(c1))/grid % wall_dist(c1) * ny
+          wt_log_law = - con_wall(c1) &
+                     * (t % n(c2) - t % n(c1))/grid % wall_dist(c1) * nz
+
+          ut % n(c1) = ut %n(c1)  * exp(-1.0 * EBF) &
+                     + ut_log_law * exp(-1.0 / EBF)
+          vt % n(c1) = vt %n(c1)  * exp(-1.0 * EBF) &
+                     + vt_log_law * exp(-1.0 / EBF)
+          wt % n(c1) = wt %n(c1)  * exp(-1.0 * EBF) &
+                     + wt_log_law * exp(-1.0 / EBF)
+    
+          if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) &
+          t % q(c2) = abs(con_wall(c1)*(t % n(c1) &
+                      - t % n(c2))/grid % wall_dist(c1))
+          g_buoy_wall = abs(grav_z)*sqrt(t % q(c2)*  &
+                        0.35*sqrt(abs(t2 % n(c1) * kin % n(c1)))) 
+
+          ! Clean up b(c) from old values of g_buoy         
+          b(c1)      = b(c1) - g_buoy(c1) * grid % vol(c1)
+
+          g_buoy(c1) = g_buoy(c1) * exp(-1.0 * EBF) &
+                     + g_buoy_wall * exp(-1.0 / EBF)
+
+          ! Add new values of g_buoy based on wall function approach          
+          b(c1)      = b(c1) + g_buoy(c1) * grid % vol(c1)
+        end if    
       end if    ! Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL or WALLFL
     end if      ! c2 < 0
   end do
