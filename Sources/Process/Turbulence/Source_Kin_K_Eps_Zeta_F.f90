@@ -76,9 +76,15 @@
                                    grav_y * vt % n(c) +  &
                                    grav_z * wt % n(c)) * density
 
+!      if(g_buoy(c) < 0.0) then
+!        g_buoy(c) = g_buoy(c) *0.5
+!      end if
 !      g_buoy(c) = max(g_buoy(c) , 0.0)    
-
-      b(c) = b(c) + g_buoy(c) * grid % vol(c)
+      if((g_buoy(c) + p_kin(c)) > 0.0.and.grid % zc(c) < z_inv) then
+        b(c) = b(c) + g_buoy(c) * grid % vol(c)
+      else if(grid % zc(c) > z_inv) then
+        b(c) = b(c) + g_buoy(c) * grid % vol(c)
+      end if
 
     end if
   end do
@@ -140,7 +146,7 @@
 
         if(rough_walls) then
           z_o = Roughness_Coefficient(grid, z_o_f(c1), c1)    
-          z_o = max(grid % wall_dist(c1)/(e_log*y_plus(c1)),z_o) 
+!         z_o = max(grid % wall_dist(c1)/(e_log*y_plus(c1)),z_o) 
           u_tau(c1)  = c_mu25 * sqrt(kin % n(c1))
           y_plus(c1) = Y_Plus_Rough_Walls(u_tau(c1), &
                        grid % wall_dist(c1), kin_vis) 
