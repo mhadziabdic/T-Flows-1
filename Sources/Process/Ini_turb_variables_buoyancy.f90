@@ -103,7 +103,8 @@
  
   do c = 1, grid % n_cells
     if(heat_transfer) then
-      flow % t_ref_f(c) = max((t_ref+t_wall)*0.5,5.0 + 4.0 * grid % wall_dist(c))
+!      flow % t_ref_f(c) = max((t_ref+t_wall)*0.5,5.0 + 4.0 * grid % wall_dist(c))
+      flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c)
 !      flow % t_ref_f(c) = (t_wall, 5.0 + 4.0 * grid % wall_dist(c))
 !      if(grid % wall_dist(c) > 0.32) then
 !        w % n(c) = 0.0
