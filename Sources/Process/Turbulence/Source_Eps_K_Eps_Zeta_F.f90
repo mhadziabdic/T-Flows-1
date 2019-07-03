@@ -69,13 +69,17 @@
     e_sor = grid % vol(c)/(t_scale(c)+TINY)
     c_11e = c_1e*(1.0 + alpha * ( 1.0/(zeta % n(c)+TINY) ))
 
-!    b(c) = b(c) + c_11e * e_sor * p_kin(c)
+    b(c) = b(c) + c_11e * e_sor * p_kin(c)
 
     ! Fill in a diagonal of coefficient matrix
     a % val(a % dia(c)) =  a % val(a % dia(c)) + c_2e * e_sor * density
 
-    ! Add buoyancy to eps equation 
-    b(c) = b(c) + c_11e * e_sor * max(p_kin(c)+g_buoy(c),0.0)
+    ! Add buoyancy to eps equation
+    if(buoyancy) then 
+      if((p_kin(c)+g_buoy(c)) > 0.0) then
+        b(c) = b(c) + c_11e * e_sor * g_buoy(c)
+      end if
+    end if
   end do
 
   !-------------------------------------------------------!
@@ -112,7 +116,7 @@
 
         if(rough_walls) then 
           z_o = Roughness_Coefficient(grid, z_o_f(c1), c1)      
-          z_o = max(grid % wall_dist(c1)/(e_log*y_plus(c1)),z_o)
+!          z_o = max(grid % wall_dist(c1)/(e_log*y_plus(c1)),z_o)
           eps % n(c1) = c_mu75 * kin % n(c1)**1.5 / & 
                       ((grid % wall_dist(c1) + z_o) * kappa)
 
