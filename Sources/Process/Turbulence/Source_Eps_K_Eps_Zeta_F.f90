@@ -76,7 +76,10 @@
 
     ! Add buoyancy to eps equation
     if(buoyancy) then 
-      if((p_kin(c)+g_buoy(c)) > 0.0) then
+!      if((p_kin(c)+g_buoy(c)) > 0.0) then
+      if((g_buoy(c) + p_kin(c)) > 0.0.and.grid % zc(c) < z_inv) then
+        b(c) = b(c) + c_11e * e_sor * g_buoy(c)
+      else if(grid % zc(c) > z_inv) then
         b(c) = b(c) + c_11e * e_sor * g_buoy(c)
       end if
     end if
