@@ -104,7 +104,7 @@
   do c = 1, grid % n_cells
     if(heat_transfer) then
 !      flow % t_ref_f(c) = max((t_ref+t_wall)*0.5,5.0 + 4.0 * grid % wall_dist(c))
-      flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c)
+      flow % t_ref_f(c) = 21.5 + 18.5 * grid % wall_dist(c)
 !      flow % t_ref_f(c) = (t_wall, 5.0 + 4.0 * grid % wall_dist(c))
 !      if(grid % wall_dist(c) > 0.32) then
 !        w % n(c) = 0.0
@@ -114,9 +114,9 @@
     end if
   end do ! through cells
 
-  if(time_step == 300) then
+  if(time_step == 6000) then
     do c = 1, grid % n_cells
-      if(grid % wall_dist(c) < 0.25) then
+      if(grid % wall_dist(c) < 0.1) then
         kin % n(c) = 0.003
         kin % o(c) = kin % n(c) 
         kin % oo(c)= kin % n(c) 
@@ -166,7 +166,7 @@
   end if
   if(time_step < 1) then
     do c = 1, grid % n_cells
-      if(grid % wall_dist(c) < 0.25) then
+      if(grid % wall_dist(c) < 0.03) then
         kin % n(c) = 0.003
         kin % o(c) = kin % n(c) 
         kin % oo(c)= kin % n(c) 
