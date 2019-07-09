@@ -43,7 +43,7 @@
     do c = 1, grid % n_cells
 
       if(heat_transfer) then
-        t % n(c)  = 5.0 + 4.0 * grid % wall_dist(c)
+        t % n(c)  = 21.5 + 18.5 * grid % wall_dist(c) !5.0 + 4.0 * grid % wall_dist(c)
         t % o(c)  = t % n(c)
         t % oo(c) = t % n(c)
       end if
@@ -73,7 +73,7 @@
 !  if(this_proc < 2) write(*,*) 'Twall = ', t_wall
 ! 
   do c = 1, grid % n_cells
-    flow % t_ref_f(c) = 5.0 + 4.0 * grid % wall_dist(c)
+    flow % t_ref_f(c) = 21.5 + 18.5 * grid % wall_dist(c) !5.0 + 4.0 * grid % wall_dist(c)
   end do ! through cells
 
   end subroutine
