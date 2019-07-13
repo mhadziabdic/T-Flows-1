@@ -79,6 +79,7 @@
 !      g_buoy(c) = max(g_buoy(c) , 0.0)    
 
       if((g_buoy(c) + p_kin(c)) > 0.0.and.grid % zc(c) < z_inv) then
+!      if(g_buoy(c) > 0.0.and.grid % zc(c) < z_inv) then
         b(c) = b(c) + g_buoy(c) * grid % vol(c)
       else if(grid % zc(c) > z_inv) then
         b(c) = b(c) + g_buoy(c) * grid % vol(c)
