@@ -51,7 +51,8 @@
   vis_t_max = 0.0
   
   do c = 1, grid % n_cells - grid % comm % n_buff_cells
-    if(grid % wall_dist(c) > 0.1.and.grid % wall_dist(c) < 0.25) then
+    if(grid % wall_dist(c) > 0.05.and.grid % wall_dist(c) < 0.2) then
+!    if(grid % wall_dist(c) > 0.1.and.grid % wall_dist(c) < 0.25) then
       t_ref = t_ref + t % n(c)
       n_ref  = n_ref + 1     
     end if
@@ -82,7 +83,8 @@
   t_wall = t_wall/n_wall
   t_ref  = t_ref /n_ref 
 
-  z_inv = (t_ref-5.0)/4.0
+!  z_inv = (t_ref-5.0)/4.0
+  z_inv = (t_ref-21.5)/18.5
 
   do c = 1, grid % n_cells - grid % comm % n_buff_cells
     if(grid % wall_dist(c) < z_inv) then
@@ -114,20 +116,20 @@
     end if
   end do ! through cells
 
-  if(time_step == 6000) then
+  if(time_step == 1100) then
     do c = 1, grid % n_cells
-      if(grid % wall_dist(c) < 0.1) then
-        kin % n(c) = 0.003
+      if(grid % wall_dist(c) < z_inv) then
+        kin % n(c) = 0.01
         kin % o(c) = kin % n(c) 
         kin % oo(c)= kin % n(c) 
-        eps % n(c) = 0.0001
+        eps % n(c) = 0.001
         eps % o(c) = eps % n(c) 
         eps % oo(c)= eps % n(c) 
         if(turbulence_model .eq. K_EPS_ZETA_F) then 
-          zeta % n(c) = 0.1 
+          zeta % n(c) = 0.001 
           zeta % o(c) = zeta % n(c) 
           zeta % oo(c)= zeta % n(c) 
-          f22 % n(c) = 0.1
+          f22 % n(c) = 0.5
           f22 % o(c) = f22 % n(c) 
           f22 % oo(c)= f22 % n(c) 
         end if
@@ -139,7 +141,7 @@
         eps % o(c) = eps % n(c) 
         eps % oo(c)= eps % n(c) 
         if(turbulence_model .eq. K_EPS_ZETA_F) then 
-          zeta % n(c) = 0.01 
+          zeta % n(c) = 0.00001 
           zeta % o(c) = zeta % n(c) 
           zeta % oo(c)= zeta % n(c) 
           f22 % n(c) = 0.01
