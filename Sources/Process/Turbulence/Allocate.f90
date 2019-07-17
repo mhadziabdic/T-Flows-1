@@ -130,6 +130,10 @@
       allocate(id_zone(-grid % n_bnd_cells:grid % n_cells));id_zone = 0
     end if
 
+    ! Post-processing parameter
+    allocate(wall_cells(-grid % n_bnd_cells:grid % n_cells));  &
+             wall_cells   = -1.0
+
     if(heat_transfer) then
 
       call Var_Mod_Allocate_Solution('T2', '', t2, grid)
