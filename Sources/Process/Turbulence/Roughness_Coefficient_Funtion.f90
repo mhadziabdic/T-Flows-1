@@ -114,6 +114,7 @@
         z_o_f(c1) = z_o_map(nearest_cell)
         c_o_f(c1) = c_o_map(nearest_cell)
         id_zone(c1) = id_map(nearest_cell)
+        wall_cells(c1) = 1.0
       end if  
     end if  
   end do
