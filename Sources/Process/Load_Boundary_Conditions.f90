@@ -134,7 +134,6 @@
                                           found,                      &
                                           .false.)
     do l = 1, types_per_color(n)
-
       ! Update the counter
       c_types = c_types + 1
 
@@ -327,6 +326,8 @@
         !------------------------!
         if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .or.  &
            keys(1) .eq. 'X' .and. keys(2) .eq. 'Z' .or.  &
+           keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+           keys(3) .eq. 'Z'.or.  &
            keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
 
           ! Set the closest point
@@ -377,6 +378,10 @@
                   dist = Distance(x,            y,            0.0,  &
                                   grid % xc(c), grid % yc(c), 0.0)
 
+                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and.&
+                        keys(3) .eq. 'Z') then
+                  dist = Distance(x,            y,            z,  &
+                                  grid % xc(c), grid % yc(c), grid % zc(c))
                 end if
 
                 ! Store closest point in k
@@ -696,6 +701,7 @@
           end do  ! c = -1, -grid % n_bnd_cells, -1
         end if  ! plane is defined?
         close(9)
+        if( grid % bnd_cond % type(n) == INFLOW ) deallocate(prof)
       end if  ! boundary defined in a file
     end do
 
