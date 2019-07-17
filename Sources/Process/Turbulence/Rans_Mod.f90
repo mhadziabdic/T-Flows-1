@@ -39,6 +39,9 @@
   ! Production of turbulent kinetic energy
   real,allocatable :: p_kin(:), p_t2(:)
 
+  ! Postprocessing parameter
+  real, allocatable    :: wall_cells(:)
+
   ! Hydraulic roughness (constant and variable)
   real                 :: z_o 
   real, allocatable    :: z_o_f(:)
