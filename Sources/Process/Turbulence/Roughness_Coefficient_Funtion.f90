@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Roughness_Coefficient_Funtion(grid) 
+  subroutine Roughness_Coefficient_Funtion(flow) 
 !------------------------------------------------------------------------------!
 !                                                                              !
 !   This subroutine reads values of roughness length in file and interpolate it!
@@ -14,8 +14,11 @@
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Grid_Type)  :: grid
+!  type(Grid_Type)  :: grid
+  type(Field_Type), target :: flow
 !-----------------------------------[Locals]-----------------------------------!
+  type(Grid_Type), pointer :: grid
+  type(Var_Type),  pointer :: t
   integer             :: k, s, c1, c2, n_points, nearest_cell 
   real                :: new_distance, old_distance
   real                :: Distance
@@ -26,6 +29,10 @@
   integer,allocatable :: id_map(:)
   logical             :: there
 !==============================================================================!
+
+  ! Take aliases
+  grid => flow % pnt_grid
+  t    => flow % t 
 
   ! Set the name for coordinate file
   call Name_File(0, z_o_map_name, ".z_o")
@@ -90,9 +97,6 @@
   end do
   close(9)
 
-
-
-
   nearest_cell = 0
   old_distance = HUGE
   do s = 1, grid % n_faces
@@ -101,20 +105,26 @@
     if(c2 < 0) then
       if( Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL .or.  &
           Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL) then
-        old_distance = HUGE
-        do k = 1, n_points
-          new_distance = Distance(grid % xc(c2), grid % yc(c2), 0.0, &
-                                        x_coord(k), y_coord(k), 0.0)
-          if(new_distance <= old_distance) then
-            nearest_cell =  k
-            old_distance = new_distance
-          end if
-        end do
 
-        z_o_f(c1) = z_o_map(nearest_cell)
-        c_o_f(c1) = c_o_map(nearest_cell)
-        id_zone(c1) = id_map(nearest_cell)
         wall_cells(c1) = 1.0
+        if(t % q(c2) > 0.00000000001) then 
+          old_distance = HUGE
+          do k = 1, n_points
+            new_distance = Distance(grid % xc(c2), grid % yc(c2), 0.0, &
+                                          x_coord(k), y_coord(k), 0.0)
+            if(new_distance <= old_distance) then
+              nearest_cell =  k
+              old_distance = new_distance
+            end if
+          end do
+
+          z_o_f(c1) = z_o_map(nearest_cell)
+          c_o_f(c1) = c_o_map(nearest_cell)
+          id_zone(c1) = id_map(nearest_cell)
+        else 
+          z_o_f(c1) = z_o
+          c_o_f(c1) = 0.0
+        end if  
       end if  
     end if  
   end do
