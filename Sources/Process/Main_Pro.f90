@@ -164,7 +164,7 @@
   call Save_Results(flow, problem_name)
 
   ! Read and interpolate roughness coef. map
-  call Roughness_Coefficient_Funtion(grid)
+  call Roughness_Coefficient_Funtion(flow)
   call Rivers_Interpolation(flow)
   
   do n = first_dt + 1, last_dt
@@ -256,7 +256,7 @@
       if(turbulence_model .eq. K_EPS) then
 
         ! Update the values at boundaries
-        call Update_Boundary_Values(flow)
+        call Update_Boundary_Values(flow, time)
 
         call Calculate_Shear_And_Vorticity(flow)
 
