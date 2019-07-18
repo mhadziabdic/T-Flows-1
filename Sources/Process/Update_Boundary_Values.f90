@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Update_Boundary_Values(flow)
+  subroutine Update_Boundary_Values(flow, time)
 !------------------------------------------------------------------------------!
 !   Update variables on the boundaries (boundary cells) where needed.          !
 !------------------------------------------------------------------------------!
@@ -19,12 +19,13 @@
 !---------------------------------[Calling]------------------------------------!
   real :: Turbulent_Prandtl_Number
   real :: Y_Plus_Low_Re
+  real :: time
 !-----------------------------------[Locals]-----------------------------------!
   type(Grid_Type), pointer :: grid
   type(Var_Type),  pointer :: u, v, w, t
   integer                  :: c1, c2, s
   real                     :: qx, qy, qz, nx, ny, nz, con_t
-  real                     :: pr, kin_vis
+  real                     :: pr, kin_vis, time_calc
 !==============================================================================!
 
   ! Take aliases
@@ -35,6 +36,9 @@
   t    => flow % t
 
   kin_vis     = viscosity / density
+
+    
+  time_calc = 7.0 + time * 1000 / 60 
 
   if(heat_transfer) then
     heat        = 0.0
@@ -191,9 +195,19 @@
                       / (con_wall(c1) + TINY)
             heat_flux = heat_flux + t % q(c2) * grid % s(s)
             if(abs(t % q(c2)) > TINY) heated_area = heated_area + grid % s(s)
-            t % q(c2) = c_o_f(c1) * 277.8
-!   1 sec of real time is 0.001 sec in simulation as t* = nu/U**2, U is the same
-!   c_o_f = 0.01 * 1000 mg / (km**2 * 3600 * 0.001) = 0.01 * 277.8
+            if(id_zone(c1) == 7) then  
+              t % q(c2) = (15.256 - 0.59742 * time_calc & 
+              - 2.4266 * time_calc**2 + 0.68512 * time_calc**3 & 
+              - 0.063098 * time_calc**4 + 0.0024598 * time_calc**5 &
+              - 3.5136e-05 * time_calc**6) / (3600.0 * 0.012)
+            else if(id_zone(c1) == 4) then
+!              t % q(c2) = c_o_f(c1) * 277.8 ! OLD
+             t % q(c2) = 0.006 * 1000000.0/3600.0 
+!   0.006 is g/m2h, h = 3600 * 1000 sec of comp time, 1 g = 1000 mg, 
+!   m2 = 0.000001 km2 
+            end if
+!   OLD (netacno): 1 sec of real time is 0.001 sec in simulation as t* = nu/U**2, U is the same
+!   OLD (netacno): c_o_f = 0.01 * 1000 mg / (km**2 * 3600 * 0.001) = 0.01 * 277.8
 !
           else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALL) then
             t % q(c2) = ( t % n(c2) - t % n(c1) ) * con_wall(c1)  &
