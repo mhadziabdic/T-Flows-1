@@ -320,16 +320,13 @@
           end do
         end do
         close(9)
-
+        
         !------------------------!
         !   A plane is defined   !
         !------------------------!
-        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .or.  &
-           keys(1) .eq. 'X' .and. keys(2) .eq. 'Z' .or.  &
-           keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
-           keys(3) .eq. 'Z'.or.  &
-           keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
-
+        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+           keys(3) .eq. 'Z') then
+!        write(*,*) grid % bnd_cond % type(n), grid % bnd_cond % name(n)   
           ! Set the closest point
           do c = -1, -grid % n_bnd_cells, -1
 
@@ -366,24 +363,36 @@
                 i = Key_Ind('Y', keys, nks); prof(m,0) = 0.0;  y = prof(m,i)
                 i = Key_Ind('Z', keys, nks); prof(m,0) = 0.0;  z = prof(m,i)
 
-                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
-                  dist = Distance(y,            z,            0.0,  &
-                                  grid % yc(c), grid % zc(c), 0.0)
 
-                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Z') then
-                  dist = Distance(x,            z,            0.0,  &
-                                  grid % xc(c), grid % zc(c), 0.0)
+!                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
+!                  dist = Distance(y,            z,            0.0,  &
+!!                         grid % yc(c), grid % zc(c), 0.0)
+!
+!                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Z') then
+!                  dist = Distance(x,            z,            0.0,  &
+!                                  grid % xc(c), grid % zc(c), 0.0)
+!
+!                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y') then
+!                  dist = Distance(x,            y,            0.0,  &
+!                                  grid % xc(c), grid % yc(c), 0.0)
+!
+!                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and.&
+!                        keys(3) .eq. 'Z') then
+!                  dist = Distance(x,            y,            z,  &
+!                                  grid % xc(c), grid % yc(c), grid % zc(c))
+!                  write(*,*) 'x y z ',  x, y, z
+!                  write(*,*)  'xc yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
+!                end if
 
-                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y') then
-                  dist = Distance(x,            y,            0.0,  &
-                                  grid % xc(c), grid % yc(c), 0.0)
-
-                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and.&
-                        keys(3) .eq. 'Z') then
+                if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+                   keys(3) .eq. 'Z') then
                   dist = Distance(x,            y,            z,  &
                                   grid % xc(c), grid % yc(c), grid % zc(c))
+!                  if(grid % bnd_cond % name(n) == 'INFLOW') then
+!                  write(*,*) 'x y z ',  x, y, z, m
+!                  write(*,*)  'xc yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
+!                  end if
                 end if
-
                 ! Store closest point in k
                 if(dist < dist_min) then
                   dist_min = dist
@@ -392,8 +401,19 @@
 
               end do
 
+                i = Key_Ind('X', keys, nks); prof(k,0) = 0.0;  x = prof(k,i)
+                i = Key_Ind('Y', keys, nks); prof(k,0) = 0.0;  y = prof(k,i)
+                i = Key_Ind('Z', keys, nks); prof(k,0) = 0.0;  z = prof(k,i)
+
+
               ! For velocity and pressure
-              i = Key_Ind('U', keys, nks); if(i > 0) u % n(c) = prof(k,i)
+              i = Key_Ind('U', keys, nks); if(i > 0) then
+                u % n(c) = prof(k,i)
+!                if(grid % bnd_cond % name(n) == 'INFLOW') then 
+!                  write(*,*) '1', k, x, y, z, grid % bnd_cond % name(n)
+!                  write(*,*) '2', grid % xc(c), grid % yc(c), grid % zc(c), u % n(c)
+!                end if
+              end if  
               i = Key_Ind('V', keys, nks); if(i > 0) v % n(c) = prof(k,i)
               i = Key_Ind('W', keys, nks); if(i > 0) w % n(c) = prof(k,i)
               i = Key_Ind('P', keys, nks); if(i > 0) p % n(c) = prof(k,i)
@@ -701,7 +721,8 @@
           end do  ! c = -1, -grid % n_bnd_cells, -1
         end if  ! plane is defined?
         close(9)
-        if( grid % bnd_cond % type(n) == INFLOW ) deallocate(prof)
+!        if( grid % bnd_cond % type(n) == INFLOW ) deallocate(prof)
+        deallocate(prof)
       end if  ! boundary defined in a file
     end do
 
