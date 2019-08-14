@@ -133,6 +133,8 @@
     ! Post-processing parameter
     allocate(wall_cells(-grid % n_bnd_cells:grid % n_cells));  &
              wall_cells   = -1.0
+    allocate(ground_cells(-grid % n_bnd_cells:grid % n_cells));  &
+             ground_cells   = -1.0
 
     if(heat_transfer) then
 
