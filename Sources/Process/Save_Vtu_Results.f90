@@ -343,6 +343,7 @@
   call Save_Vtu_Scalar(grid, IN_4, IN_5, "WallDistance", grid % wall_dist(1))
   call Save_Vtu_Scalar(grid, IN_4, IN_5, "Elevation",    grid % zc(1))
   call Save_Vtu_Scalar(grid, IN_4, IN_5, "Near_Wall_Cells",    wall_cells(1))
+  call Save_Vtu_Scalar(grid, IN_4, IN_5, "Ground_Wall_Cells",    ground_cells(1))
   if(rough_walls) call Save_Vtu_Scalar(grid, IN_4, IN_5, "Roughness",    z_o_f(1))
 
   !----------------------!
