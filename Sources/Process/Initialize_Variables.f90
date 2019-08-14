@@ -253,7 +253,8 @@
             if(grid % wall_dist(c) < 0.460) then
               t % n(c) = (212.33 - 1.3436 * grid % wall_dist(c) * 1000.0 &
                           + 0.0031726 * (grid % wall_dist(c)*1000.0)**2 &
-                        - 2.6891e-06 * (grid % wall_dist(c)*1000.0)**3) 
+                        - 2.6891e-06 * (grid % wall_dist(c)*1000.0)**3)  
+!                        - 2.6891e-06 * (grid % wall_dist(c)*1000.0)**3) * 0.2 !for urban comp 
             else
               t % n(c) = 3.5 
             end if
