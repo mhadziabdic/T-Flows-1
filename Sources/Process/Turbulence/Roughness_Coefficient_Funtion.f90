@@ -19,7 +19,7 @@
 !-----------------------------------[Locals]-----------------------------------!
   type(Grid_Type), pointer :: grid
   type(Var_Type),  pointer :: t
-  integer             :: k, s, c1, c2, n_points, nearest_cell 
+  integer             :: k, s, c, c1, c2, n_points, nearest_cell 
   real                :: new_distance, old_distance
   real                :: Distance
   character(len=80)   :: z_o_map_name
@@ -36,6 +36,11 @@
 
   ! Set the name for coordinate file
   call Name_File(0, z_o_map_name, ".z_o")
+
+  do c = 1, grid % n_cells
+    wall_cells(c)   = -1.0
+    ground_cells(c) = -1.0
+  end do
 
   !------------------!
   !   Read 1r file   !
@@ -80,7 +85,7 @@
     z_coord(k) = z_coord(k) * 0.001  
     z_o_map(k) = z_o_map(k) * 0.001
     if(id_map(k) == 1) then
-      c_o_map(k) = 0.0
+      c_o_map(k) = 0.000000001
     else if(id_map(k) == 2) then
       c_o_map(k) = 0.0001
     else if(id_map(k) == 3) then
@@ -88,9 +93,9 @@
     else if(id_map(k) == 4) then
       c_o_map(k) = 0.01
     else if(id_map(k) == 5) then
-      c_o_map(k) = 0.0
+      c_o_map(k) = 0.000000001
     else if(id_map(k) == 6) then
-      c_o_map(k) = 0.0
+      c_o_map(k) = 0.000000001
     else if(id_map(k) == 7) then
       c_o_map(k) = 0.01
     end if
@@ -107,7 +112,8 @@
           Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. WALLFL) then
 
         wall_cells(c1) = 1.0
-        if(t % q(c2) > 0.00000000001) then 
+        if(grid % bnd_cond % color(c2) == 1) then  ! This is "Ground" boundary condition
+          ground_cells(c1) = 1.0
           old_distance = HUGE
           do k = 1, n_points
             new_distance = Distance(grid % xc(c2), grid % yc(c2), 0.0, &
