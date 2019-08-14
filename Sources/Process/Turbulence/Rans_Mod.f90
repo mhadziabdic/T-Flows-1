@@ -41,6 +41,7 @@
 
   ! Postprocessing parameter
   real, allocatable    :: wall_cells(:)
+  real, allocatable    :: ground_cells(:)
 
   ! Hydraulic roughness (constant and variable)
   real                 :: z_o 
