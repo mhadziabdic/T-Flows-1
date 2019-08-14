@@ -171,6 +171,7 @@
 
     time = time + dt
 
+    call Update_Scalar_Source(flow,time)
     ! Beginning of time steo
     call User_Mod_Beginning_Of_Time_Step(flow, n, time)
 
@@ -256,7 +257,7 @@
       if(turbulence_model .eq. K_EPS) then
 
         ! Update the values at boundaries
-        call Update_Boundary_Values(flow, time)
+        call Update_Boundary_Values(flow)
 
         call Calculate_Shear_And_Vorticity(flow)
 
