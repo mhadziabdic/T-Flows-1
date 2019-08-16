@@ -324,9 +324,13 @@
         !------------------------!
         !   A plane is defined   !
         !------------------------!
-        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
-           keys(3) .eq. 'Z') then
+!        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+!           keys(3) .eq. 'Z') then
 !        write(*,*) grid % bnd_cond % type(n), grid % bnd_cond % name(n)   
+        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .or.  &
+           keys(1) .eq. 'X' .and. keys(2) .eq. 'Z' .or.  &
+           keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
+
           ! Set the closest point
           do c = -1, -grid % n_bnd_cells, -1
 
@@ -364,10 +368,12 @@
                 i = Key_Ind('Z', keys, nks); prof(m,0) = 0.0;  z = prof(m,i)
 
 
-!                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
-!                  dist = Distance(y,            z,            0.0,  &
-!!                         grid % yc(c), grid % zc(c), 0.0)
-!
+                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
+                  dist = Distance(y,            z,            0.0,  &
+                         grid % yc(c), grid % zc(c), 0.0)
+!                  write(*,*) 'y z ',  y, z
+!                  write(*,*)  'yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
+                end if 
 !                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Z') then
 !                  dist = Distance(x,            z,            0.0,  &
 !                                  grid % xc(c), grid % zc(c), 0.0)
@@ -384,16 +390,12 @@
 !                  write(*,*)  'xc yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
 !                end if
 
-                if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
-                   keys(3) .eq. 'Z') then
-                  dist = Distance(x,            y,            z,  &
-                                  grid % xc(c), grid % yc(c), grid % zc(c))
-!                  if(grid % bnd_cond % name(n) == 'INFLOW') then
-!                  write(*,*) 'x y z ',  x, y, z, m
-!                  write(*,*)  'xc yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
-!                  end if
-                end if
-                ! Store closest point in k
+!                if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+!                   keys(3) .eq. 'Z') then
+!                  dist = Distance(x,            y,            z,  &
+!                                  grid % xc(c), grid % yc(c), grid % zc(c))
+!                end if
+               ! Store closest point in k
                 if(dist < dist_min) then
                   dist_min = dist
                   k = m
