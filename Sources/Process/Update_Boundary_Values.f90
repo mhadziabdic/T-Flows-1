@@ -63,9 +63,9 @@
           Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. SYMMETRY ) then
 !     This was used to prevent numerical instabilities on left side where PRESSURE
 !     boundary was imposed. It helps. 
-!        if(grid % yc(c2) > 4.5.and.Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then  
-!          u % n(c2) = min(u % n(c1),1.6)
-!          v % n(c2) = max(v % n(c1),-1.4)
+!        if(grid % yc(c2) > 15.35.and.Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then  
+!          u % n(c2) = min(u % n(c1),3.6)
+!          v % n(c2) = max(v % n(c1),-5.0)
 !          w % n(c2) = w % n(c1)
 !        else
           u % n(c2) = u % n(c1)
