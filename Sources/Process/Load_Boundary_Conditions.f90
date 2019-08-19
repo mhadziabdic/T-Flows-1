@@ -324,12 +324,12 @@
         !------------------------!
         !   A plane is defined   !
         !------------------------!
-!        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
-!           keys(3) .eq. 'Z') then
+        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+           keys(3) .eq. 'Z') then
 !        write(*,*) grid % bnd_cond % type(n), grid % bnd_cond % name(n)   
-        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .or.  &
-           keys(1) .eq. 'X' .and. keys(2) .eq. 'Z' .or.  &
-           keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
+!        if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .or.  &
+!           keys(1) .eq. 'X' .and. keys(2) .eq. 'Z' .or.  &
+!           keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
 
           ! Set the closest point
           do c = -1, -grid % n_bnd_cells, -1
@@ -368,12 +368,10 @@
                 i = Key_Ind('Z', keys, nks); prof(m,0) = 0.0;  z = prof(m,i)
 
 
-                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
-                  dist = Distance(y,            z,            0.0,  &
-                         grid % yc(c), grid % zc(c), 0.0)
-!                  write(*,*) 'y z ',  y, z
-!                  write(*,*)  'yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
-                end if 
+!!                if(keys(1) .eq. 'Y' .and. keys(2) .eq. 'Z') then
+ !!                 dist = Distance(y,            z,            0.0,  &
+  !!                       grid % yc(c), grid % zc(c), 0.0)
+   !!             end if 
 !                else if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Z') then
 !                  dist = Distance(x,            z,            0.0,  &
 !                                  grid % xc(c), grid % zc(c), 0.0)
@@ -390,11 +388,11 @@
 !                  write(*,*)  'xc yc zc ',  grid % xc(c), grid % yc(c), grid % zc(c)
 !                end if
 
-!                if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
-!                   keys(3) .eq. 'Z') then
-!                  dist = Distance(x,            y,            z,  &
-!                                  grid % xc(c), grid % yc(c), grid % zc(c))
-!                end if
+                if(keys(1) .eq. 'X' .and. keys(2) .eq. 'Y' .and. &
+                   keys(3) .eq. 'Z') then
+                  dist = Distance(x,            y,            z,  &
+                                  grid % xc(c), grid % yc(c), grid % zc(c))
+                end if
                ! Store closest point in k
                 if(dist < dist_min) then
                   dist_min = dist
@@ -409,13 +407,14 @@
 
 
               ! For velocity and pressure
-              i = Key_Ind('U', keys, nks); if(i > 0) then
-                u % n(c) = prof(k,i)
+!              i = Key_Ind('U', keys, nks); if(i > 0) then
+!                u % n(c) = prof(k,i)
 !                if(grid % bnd_cond % name(n) == 'INFLOW') then 
 !                  write(*,*) '1', k, x, y, z, grid % bnd_cond % name(n)
 !                  write(*,*) '2', grid % xc(c), grid % yc(c), grid % zc(c), u % n(c)
 !                end if
-              end if  
+!              end if  
+              i = Key_Ind('U', keys, nks); if(i > 0) u % n(c) = prof(k,i)
               i = Key_Ind('V', keys, nks); if(i > 0) v % n(c) = prof(k,i)
               i = Key_Ind('W', keys, nks); if(i > 0) w % n(c) = prof(k,i)
               i = Key_Ind('P', keys, nks); if(i > 0) p % n(c) = prof(k,i)
