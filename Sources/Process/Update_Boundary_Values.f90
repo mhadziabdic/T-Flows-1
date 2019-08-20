@@ -55,6 +55,7 @@
     ! On the boundary perform the extrapolation
     if(c2  < 0) then
 
+
       ! Extrapolate velocities on the outflow boundary
       ! SYMMETRY is intentionally not treated here because I wanted to
       ! be sure that is handled only via graPHI and NewUVW functions)
@@ -67,16 +68,18 @@
         v % n(c2) = v % n(c1)
         w % n(c2) = w % n(c1)
         if(heat_transfer) t % n(c2) = t % n(c1)
-        if(grid % xc(c2) > 7.35.and. grid % xc(c2) < 9.35) then  
-          if(grid % bnd_cond % color(c2) .eq. 14) then  
-            u % n(c2) = min(u % n(c1),3.6)
-            u % n(c2) = max(u % n(c1),-1.0)
-!          v % n(c2) = min(v % n(c1),3.0)
-            v % n(c2) = max(v % n(c1),-2.0)
-            w % n(c2) = min(w % n(c1),1.0)
-            w % n(c2) = max(w % n(c1),-1.0)
-          end if
-        end if
+!        if(grid % xc(c2) > 7.35.and. grid % xc(c2) < 9.35) then  
+!          if(grid % bnd_cond % color(c2) .eq. 14) then  
+!        if( Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then    
+!            u % n(c2) = min(u % n(c1),4.0)
+!            u % n(c2) = max(u % n(c1),-1.1)
+!            v % n(c2) = min(v % n(c1),3.0)
+!            v % n(c2) = max(v % n(c1),-2.0)
+!            w % n(c2) = min(w % n(c1),3.0)
+!            w % n(c2) = min(w % n(c1),2.0)  ! do 216 je radilo dobro
+!            w % n(c2) = max(w % n(c1),-1.0)
+!          end if
+!        end if
       end if
 
       ! Spalart Allmaras
