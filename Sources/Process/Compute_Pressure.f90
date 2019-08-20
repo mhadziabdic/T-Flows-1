@@ -187,7 +187,22 @@
 
         a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
+      else if(grid % bnd_cond % color(c2) .eq. 7) then
+        if(grid % xc(c2) > 0.02.and.grid % xc(c2)<0.7.and.grid % yc(c2)<3.5) then
+          b(c1) = b(c1)+flux(s)
+          flux(s) = 0.0
 
+          a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
+          a % val(a % dia(c1)) = a % val(a % dia(c1)) - a12
+        end if
+      else if(grid % bnd_cond % color(c2) .eq. 4) then
+        if(grid % xc(c2) > 0.02.and.grid % xc(c2)<0.7.and.grid % zc(c2)>1.6) then
+          b(c1) = b(c1)+flux(s)
+          flux(s) = 0.0
+
+          a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
+          a % val(a % dia(c1)) = a % val(a % dia(c1)) - a12
+        end if
       else  ! it is SYMMETRY
         flux(s) = 0.0
       end if
