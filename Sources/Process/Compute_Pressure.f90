@@ -178,11 +178,11 @@
 
       else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then
         u % n(c1) = min(u % n(c1),4.0)
-        u % n(c1) = max(u % n(c1),-1.4)
+        u % n(c1) = max(u % n(c1),-1.6)
         v % n(c1) = min(v % n(c1),3.0)
         v % n(c1) = max(v % n(c1),-2.0)
         w % n(c1) = min(w % n(c1),3.0)
-        w % n(c1) = max(w % n(c1),-1.4)
+        w % n(c1) = max(w % n(c1),-1.6)
 
         u_f = u % n(c1)
         v_f = v % n(c1)
