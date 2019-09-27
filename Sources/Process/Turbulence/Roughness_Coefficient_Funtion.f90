@@ -88,8 +88,10 @@
       c_o_map(k) = 0.000000001
     else if(id_map(k) == 2) then
       c_o_map(k) = 0.0001
+      z_o_map(k) = 0.5
     else if(id_map(k) == 3) then
       c_o_map(k) = 0.0001
+      z_o_map(k) = 0.5
     else if(id_map(k) == 4) then
       c_o_map(k) = 0.01
     else if(id_map(k) == 5) then
