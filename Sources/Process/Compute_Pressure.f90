@@ -177,12 +177,18 @@
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
 
       else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then
-        u % n(c1) = min(u % n(c1),4.0)
-        u % n(c1) = max(u % n(c1),-1.6)
-        v % n(c1) = min(v % n(c1),3.0)
-        v % n(c1) = max(v % n(c1),-2.0)
-        w % n(c1) = min(w % n(c1),3.0)
-        w % n(c1) = max(w % n(c1),-1.6)
+        if(grid % bnd_cond % color(c2) .eq. 5.or.&
+           grid % bnd_cond % color(c2) .eq. 4) then 
+
+!         if(grid % zc(c2) < 1.1) then
+            u % n(c1) = min(u % n(c1),4.8)
+            u % n(c1) = max(u % n(c1),-2.0)
+!          end if
+          v % n(c1) = min(v % n(c1),1.5)
+          v % n(c1) = max(v % n(c1),-1.5)
+          w % n(c2) = min(w % n(c1),1.7)
+          w % n(c2) = max(w % n(c1),-1.7)
+        end if
 
         u_f = u % n(c1)
         v_f = v % n(c1)
@@ -194,22 +200,6 @@
 
         a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
-!      else if(grid % bnd_cond % color(c2) .eq. 7) then
-!        if(grid % xc(c2) > 0.02.and.grid % xc(c2)<0.7.and.grid % yc(c2)<3.5) then
-!          b(c1) = b(c1)+flux(s)
-!          flux(s) = 0.0
-!
-!          a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
-!          a % val(a % dia(c1)) = a % val(a % dia(c1)) - a12
-!        end if
-!      else if(grid % bnd_cond % color(c2) .eq. 4) then
-!        if(grid % xc(c2) > 0.02.and.grid % xc(c2)<0.7.and.grid % zc(c2)>1.6) then
-!          b(c1) = b(c1)+flux(s)
-!          flux(s) = 0.0
-!
-!          a12 = density * a % fc(s) * grid % vol(c1) / a % sav(c1)
-!          a % val(a % dia(c1)) = a % val(a % dia(c1)) - a12
-!        end if
       else  ! it is SYMMETRY
         flux(s) = 0.0
       end if
