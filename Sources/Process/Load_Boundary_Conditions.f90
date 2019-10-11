@@ -27,7 +27,7 @@
   type(Var_Type),  pointer :: scalar(:)
   integer                  :: c, m, l, k, i, n, n_points, nks, nvs, sc, c1, c2, s
   character(len=80)        :: name_prof(128), answer, name_in
-  real                     :: wi, dist_min, x, y, z, xp, dist
+  real                     :: wi, dist_min, x, y, z, xp, dist, u_mag
   real, allocatable        :: prof(:,:)
   logical                  :: here
   character(len=80)        :: bc_type_name, try_str
@@ -744,7 +744,9 @@
         grid % cell_near_wall(c1) = .true.
       end if
 !      if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. INFLOW ) then
-!        u % n(c2) = max(u % n(c2), 0.001) 
+!        u_mag = sqrt( u % n(c2)**2 + v % n(c2)**2 )
+!        u % n(c2) =  u_mag * 0.977
+!        v % n(c2) = -u_mag * 0.2113
 !      end if
     end if
 
