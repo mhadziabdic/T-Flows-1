@@ -177,17 +177,53 @@
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
 
       else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then
-        if(grid % bnd_cond % color(c2) .eq. 5.or.&
-           grid % bnd_cond % color(c2) .eq. 4) then 
-
-!         if(grid % zc(c2) < 1.1) then
-            u % n(c1) = min(u % n(c1),4.8)
-            u % n(c1) = max(u % n(c1),-2.0)
-!          end if
-          v % n(c1) = min(v % n(c1),1.5)
+        if(grid % bnd_cond % color(c2) .eq. 5) then
+!           grid % bnd_cond % color(c2) .eq. 4) then 
+!                    1 GROUND                                                                                              1
+!                    2 INFLOW                                                                                              1
+!                    3 OUTFLOW                                                                                             1
+!                    4 RIGHT_SIDE                                                                                          1
+!                    5 LEFT_SIDE                                                                                           1
+!                    6 BUILDINGS                                                                                           1
+!                    7 TOP                                                                                                 1
+          u % n(c1) = min(u % n(c1),4.8)
+          u % n(c1) = max(u % n(c1),-1.0)
+          v % n(c1) = min(v % n(c1),0.5)
+          v % n(c1) = max(v % n(c1),-0.5)
+          w % n(c1) = min(w % n(c1),0.7)
+          w % n(c1) = max(w % n(c1),-0.7)
+          u % n(c2) = min(u % n(c1),4.8)
+          u % n(c2) = max(u % n(c1),-1.0)
+          v % n(c2) = min(v % n(c1),0.5)
+          v % n(c2) = max(v % n(c1),-0.5)
+          w % n(c2) = min(w % n(c1),0.7)
+          w % n(c2) = max(w % n(c1),-0.7)
+      else  if(grid % bnd_cond % color(c2) .eq. 4) then
+          u % n(c1) = min(u % n(c1),4.8)
+          u % n(c1) = max(u % n(c1),-1.0)
+          v % n(c1) = min(v % n(c1),0.5)
           v % n(c1) = max(v % n(c1),-1.5)
-          w % n(c2) = min(w % n(c1),1.7)
-          w % n(c2) = max(w % n(c1),-1.7)
+          w % n(c1) = min(w % n(c1),0.7)
+          w % n(c1) = max(w % n(c1),-0.7)
+          u % n(c2) = min(u % n(c1),4.8)
+          u % n(c2) = max(u % n(c1),-1.0)
+          v % n(c2) = min(v % n(c1),0.5)
+          v % n(c2) = max(v % n(c1),-1.5)
+          w % n(c2) = min(w % n(c1),0.7)
+          w % n(c2) = max(w % n(c1),-0.7)
+      else  if(grid % bnd_cond % color(c2) .eq. 7) then
+          u % n(c1) = min(u % n(c1),4.8)
+          u % n(c1) = max(u % n(c1),-2.0)
+          v % n(c1) = min(v % n(c1),0.5)
+          v % n(c1) = max(v % n(c1),-1.5)
+          w % n(c1) = min(w % n(c1),0.7)
+          w % n(c1) = max(w % n(c1),-0.7)
+          u % n(c2) = min(u % n(c1),4.8)
+          u % n(c2) = max(u % n(c1),-2.0)
+          v % n(c2) = min(v % n(c1),0.5)
+          v % n(c2) = max(v % n(c1),-1.5)
+          w % n(c2) = min(w % n(c1),0.7)
+          w % n(c2) = max(w % n(c1),-0.7)
         end if
 
         u_f = u % n(c1)
