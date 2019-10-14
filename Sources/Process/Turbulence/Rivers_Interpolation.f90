@@ -100,8 +100,8 @@
           end do
 
           river_angle(c1) = angle(nearest_cell)
-          U % n(c2) = cos(river_angle(c1))
-          V % n(c2) = sin(river_angle(c1))
+          U % n(c2) = 2.0*cos(river_angle(c1))
+          V % n(c2) = 2.0*sin(river_angle(c1))
 
         end if  
       end if  
