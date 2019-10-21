@@ -177,7 +177,7 @@
         a % val(a % dia(c1)) = a % val(a % dia(c1)) + a12
 
       else if(Grid_Mod_Bnd_Cond_Type(grid,c2) .eq. PRESSURE) then
-        if(grid % bnd_cond % color(c2) .eq. 5) then
+        if(grid % bnd_cond % color(c2) .eq. 4) then
 !           grid % bnd_cond % color(c2) .eq. 4) then 
 !                    1 GROUND                                                                                              1
 !                    2 INFLOW                                                                                              1
@@ -198,7 +198,7 @@
           v % n(c2) = max(v % n(c1),-0.5)
           w % n(c2) = min(w % n(c1),0.7)
           w % n(c2) = max(w % n(c1),-0.7)
-      else  if(grid % bnd_cond % color(c2) .eq. 4) then
+      else  if(grid % bnd_cond % color(c2) .eq. 5) then
           u % n(c1) = min(u % n(c1),4.8)
           u % n(c1) = max(u % n(c1),-1.0)
           v % n(c1) = min(v % n(c1),0.5)
