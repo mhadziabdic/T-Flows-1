@@ -81,27 +81,27 @@
     real, allocatable :: y_plus(:)
 
     ! Production of turbulent kinetic energy and temperature fluctuations
-    real, allocatable :: p_kin(:), p_t2(:)
+    real, allocatable :: p_kin(:), p_t2(:) ! [m^2/s^3], [K^2/s]
 
     ! Buoyancy production for k-eps-zeta-f model
     real, allocatable :: g_buoy(:)
 
     ! Turbulent lenght and time Scales
-    real, allocatable :: l_scale(:)
-    real, allocatable :: t_scale(:)
+    real, allocatable :: l_scale(:) ! [m]
+    real, allocatable :: t_scale(:) ! [s]
 
     ! Turbulent viscosity
-    real, allocatable :: vis_t(:)
+    real, allocatable :: vis_t(:) ! [kg/(m s)]
 
     ! Effective turbulent viscosity
-    real, allocatable :: vis_t_eff(:)
-    real, allocatable :: vis_t_sgs(:)
+    real, allocatable :: vis_t_eff(:) ! [kg/(m s)]
+    real, allocatable :: vis_t_sgs(:) ! [kg/(m s)]
 
-    real, allocatable :: tau_wall(:)
+    real, allocatable :: tau_wall(:)  ! [kg/(m s^2)]
 
     ! Wall viscosity and conductivity (wall function approach)
-    real, allocatable :: vis_w(:)
-    real, allocatable :: con_w(:)
+    real, allocatable :: vis_w(:) ! [kg/(m s)]
+    real, allocatable :: con_w(:) ! [W/(m K)]
 
     ! Scale-resolving simulations
     real, allocatable :: c_dyn(:)
@@ -138,6 +138,7 @@
   integer :: turbulence_wall_treatment  ! HIGH_RE, LOW_RE, COMPOUND
   logical :: turbulence_statistics
   integer :: turbulent_heat_flux_model
+  integer :: hybrid_les_rans_switch
 
   ! Parameters describing turbulence model choice
   ! (Prime numbers starting from 30000)
@@ -162,6 +163,10 @@
   integer, parameter :: SGDH = 30137
   integer, parameter :: GGDH = 30139
   integer, parameter :: AFM  = 30161
+
+  ! Switching criteria for hybrid LES/RANS
+  integer, parameter :: SWITCH_DISTANCE = 30169
+  integer, parameter :: SWITCH_VELOCITY = 30181
 
   !--------------------------------!
   !   Turbulence model constants   !
@@ -208,6 +213,7 @@
   include 'Turb_Mod/Calculate_Face_Vis.f90'
   include 'Turb_Mod/Calculate_Heat_Flux.f90'
   include 'Turb_Mod/Calculate_Mean.f90'
+  include 'Turb_Mod/Calculate_Stress.f90'
   include 'Turb_Mod/Substract_Face_Stress.f90'
 
   ! Functions to set turbulence constants

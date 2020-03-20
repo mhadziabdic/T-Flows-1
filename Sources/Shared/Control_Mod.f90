@@ -79,6 +79,7 @@
     include 'Control_Mod/Physics/Turbulent_Prandtl_Number.f90'
     include 'Control_Mod/Physics/Turbulent_Schmidt_Number.f90'
     include 'Control_Mod/Physics/Turbulent_Heat_Flux_Model.f90'
+    include 'Control_Mod/Physics/Hybrid_Les_Rans_Switch.f90'
 
     ! Other environmental conditions
     include 'Control_Mod/Physics/Angular_Velocity_Vector.f90'
@@ -88,6 +89,7 @@
     include 'Control_Mod/Physics/Point_For_Monitoring_Planes.f90'
 
     ! Multiphase
+    include 'Control_Mod/Physics/Distance_Function.f90'
     include 'Control_Mod/Physics/Number_Of_Phases.f90'
     include 'Control_Mod/Physics/Number_Of_Particles.f90'
     include 'Control_Mod/Physics/Number_Of_Swarm_Sub_Steps.f90'
@@ -165,5 +167,14 @@
     include 'Control_Mod/Numerics/V_Cycle_Max_Grid_Levels.f90'
     include 'Control_Mod/Numerics/V_Cycle_Number_Of_Smoothing_Iterations.f90'
     include 'Control_Mod/Numerics/V_Cycle_Residual_Ratio.f90'
- 
+
+    !Numerical Parameters VOF (CICSAM)
+    include 'Control_Mod/Numerics/Distance_Function_Time_Integration_Scheme_Vof.f90'
+    include 'Control_Mod/Numerics/Factor_Number_Cells_Distance_Function_Vof.f90'
+    include 'Control_Mod/Numerics/Factor_Fictitious_Time_Vof.f90'
+    include 'Control_Mod/Numerics/Max_Correction_Cycles_Beta_Vof.f90'
+    include 'Control_Mod/Numerics/Max_Smoothing_Cycles_Curvature_Vof.f90'
+    include 'Control_Mod/Numerics/Max_Smoothing_Cycles_Normal_Vof.f90'
+    include 'Control_Mod/Numerics/Max_Courant_Vof.f90'
+    include 'Control_Mod/Numerics/Max_Substep_Cycles_Vof.f90'
   end module

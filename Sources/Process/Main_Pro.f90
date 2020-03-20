@@ -101,7 +101,7 @@
   call Control_Mod_Starting_Time_Step_For_Statistics(n_stat, verbose=.true.)
 
   ! Read physical models from control file
-  call Read_Control_Physical(flow, swarm, turb)
+  call Read_Control_Physical(flow, turb, mult, swarm)
 
   ! Allocate memory for all variables
   call Field_Mod_Allocate(flow, grid)
@@ -116,12 +116,14 @@
   call Grid_Mod_Calculate_Face_Geometry(grid)
   call Grid_Mod_Find_Nodes_Cells(grid)         ! for Lagrangian particle track
   call Grid_Mod_Find_Periodic_Faces(grid)      ! for Lagrangian particle track
+  call Grid_Mod_Find_Cells_Faces(grid)         ! for Multiphase Module
+  call Grid_Mod_Calculate_Global_Volumes(grid)
 
   ! Allocate memory for linear systems of equations
   ! (You need face geomtry for this step)
   call Solver_Mod_Create(sol, grid)
 
-  call Load_Physical_Properties(flow)
+  call Load_Physical_Properties(flow, mult, swarm)
 
   call Load_Boundary_Conditions(flow, turb, mult, turb_planes)
 
@@ -181,14 +183,11 @@
 
   ! It will save results in .vtk or .cgns file format,
   ! depending on how the code was compiled
-  call Save_Results(flow, turb, mult, first_dt, .true.)   ! save inside
-  call Save_Results(flow, turb, mult, first_dt, .false.)  ! save boundary
+  call Save_Results(flow, turb, mult, swarm, first_dt, .true.)   ! save inside
+  call Save_Results(flow, turb, mult, swarm, first_dt, .false.)  ! save boundary
   call Save_Swarm(swarm, first_dt)
 
   do n = first_dt + 1, last_dt
-    ! For post-processing
-
-    ! call  Multiphase_Mod_Vof_Spurious_Post(flow, time, n)
 
     ! Update turbulent planes
     do tp = 1, turb_planes % n_planes
@@ -222,14 +221,18 @@
 
     ! Volume of Fluid
     if(multiphase_model .eq. VOLUME_OF_FLUID) then
+      flow % m_flux % o = flow % m_flux % n / flow % density_f
       ! Update the values at boundaries
       call Update_Boundary_Values(flow, turb, mult)
       call Multiphase_Mod_Compute_Vof(mult, sol, flow % dt, n)
-      call Multiphase_Mod_Update_Physical_Properties(mult)
-
+    else
+      flow % m_flux % o = flow % m_flux % n
     end if
 
     do ini = 1, max_ini
+
+      ! Beginning of iteration
+      call User_Mod_Beginning_Of_Iteration(flow, turb, mult, swarm, n, time)
 
       call Info_Mod_Iter_Fill(ini)
 
@@ -256,7 +259,7 @@
 
       call Field_Mod_Grad_Pressure_Correction(flow, flow % pp)
 
-      call Bulk_Mod_Calculate_Fluxes(grid, flow % bulk, flow % m_flux % n)
+      call Field_Mod_Calculate_Fluxes(flow, flow % m_flux % n)
       mass_res = Correct_Velocity(flow, sol, flow % dt, ini)
 
       ! Energy (practically temperature)
@@ -273,10 +276,14 @@
       call Turb_Mod_Main(turb, sol, n, ini)
 
       ! Update the values at boundaries
+      call Convective_Outflow(flow, turb, mult, flow % dt)
       call Update_Boundary_Values(flow, turb, mult)
 
       ! End of the current iteration
       call Info_Mod_Iter_Print()
+
+      ! End of iteration
+      call User_Mod_End_Of_Iteration(flow, turb, mult, swarm, n, time)
 
       if(ini >= min_ini) then
         call Control_Mod_Tolerance_For_Simple_Algorithm(simple_tol)
@@ -328,23 +335,23 @@
        mod(n, rsi) .eq. 0 .or.  &
        real(sc_cur-sc_ini)/real(sc_cr) > wt_max) then
       call Comm_Mod_Wait
-      call Save_Results(flow, turb, mult, n, .true.)   ! save inside
-      call Save_Results(flow, turb, mult, n, .false.)  ! save bnd
+      call Save_Results(flow, turb, mult, swarm, n, .true.)   ! save inside
+      call Save_Results(flow, turb, mult, swarm, n, .false.)  ! save bnd
       call Save_Swarm(swarm, n)
 
       if(multiphase_model .eq. VOLUME_OF_FLUID) then
-        call Surf_Mod_Allocate(surf, flow)
-        call Surf_Mod_Place_At_Var_Value(surf,        &
-                                         mult % vof,  &
-                                         sol,         &
-                                         0.5,         &
-                                         .false.)  ! don't print messages
-        call Save_Surf(surf, n)
-        call Surf_Mod_Clean(surf)
+!        call Surf_Mod_Allocate(surf, flow)
+!        call Surf_Mod_Place_At_Var_Value(surf,        &
+!                                         mult % vof,  &
+!                                         sol,         &
+!                                         0.5,         &
+!                                         .false.)  ! don't print messages
+!        call Save_Surf(surf, n)
+!        call Surf_Mod_Clean(surf)
       end if
 
       ! Write results in user-customized format
-      call User_Mod_Save_Results(flow, turb, mult, n)
+      call User_Mod_Save_Results(flow, turb, mult, swarm, n)
       ! call User_Mod_Save_Swarm(swarm, n)  to be done!
     end if
 
@@ -380,9 +387,11 @@
   ! Save backup and post-processing files at exit
   call Comm_Mod_Wait
   call Backup_Mod_Save(flow, swarm, turb, mult, n, n_stat)
+  call Save_Results(flow, turb, mult, swarm, n, .true.)   ! save inside
+  call Save_Results(flow, turb, mult, swarm, n, .false.)  ! save bnd
 
   ! Write results in user-customized format
-  call User_Mod_Save_Results(flow, turb, mult, n) 
+  call User_Mod_Save_Results(flow, turb, mult, swarm, n)
 
   if(this_proc < 2) then
     open(9, file='stop')

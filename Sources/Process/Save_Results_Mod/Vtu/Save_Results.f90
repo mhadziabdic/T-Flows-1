@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Save_Results(flow, turb, mult, ts, plot_inside)
+  subroutine Save_Results(flow, turb, mult, swarm, ts, plot_inside)
 !------------------------------------------------------------------------------!
 !   Writes results in VTU file format (for VisIt and Paraview)                 !
 !------------------------------------------------------------------------------!
@@ -23,6 +23,7 @@
   type(Field_Type),      target :: flow
   type(Turb_Type),       target :: turb
   type(Multiphase_Type), target :: mult
+  type(Swarm_Type),      target :: swarm
   integer                       :: ts           ! time step
   logical                       :: plot_inside  ! plot results inside?
 !----------------------------------[Locals]------------------------------------!
@@ -318,6 +319,12 @@
     call Save_Scalar(grid, IN_4, IN_5, "VolumeFraction", plot_inside,        &
                                        mult % vof % n(-grid % n_bnd_cells),  &
                                        f8, f9)
+    if (mult % d_func) then
+      call Save_Scalar(grid, IN_4, IN_5, "DistanceFunction", plot_inside,    &
+                                         mult % dist_func                    &
+                                         % n(-grid % n_bnd_cells),           &
+                                         f8, f9)
+    end if
   end if
 
   !------------------!
@@ -441,6 +448,17 @@
     call Save_Scalar(grid, IN_4, IN_5, "ReynoldsStressYZ", plot_inside,     &
                                        turb % vw % n(-grid % n_bnd_cells),  &
                                        f8, f9)
+    if(heat_transfer) then
+      call Save_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxX", plot_inside,    &
+                                         turb % ut % n(-grid % n_bnd_cells),   &
+                                         f8, f9)
+      call Save_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxY", plot_inside,    &
+                                         turb % vt % n(-grid % n_bnd_cells),   &
+                                         f8, f9)
+      call Save_Scalar(grid, IN_4, IN_5, "TurbulentHeatFluxZ", plot_inside,    &
+                                         turb % wt % n(-grid % n_bnd_cells),   &
+                                         f8, f9)
+    end if
   end if
 
   ! Statistics for large-scale simulations of turbulence

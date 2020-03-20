@@ -17,7 +17,7 @@
   type(Field_Type),  pointer :: flow
   type(Grid_Type),   pointer :: grid
   type(Var_Type),    pointer :: u, v, w
-  type(Var_Type),    pointer :: kin, eps, zeta, f22
+  type(Var_Type),    pointer :: kin, eps, zeta, f22, ut, vt, wt
   type(Matrix_Type), pointer :: a
   real,              pointer :: b(:)
   integer                    :: c, s, c1, c2, j
@@ -56,6 +56,7 @@
   grid => flow % pnt_grid
   call Field_Mod_Alias_Momentum   (flow, u, v, w)
   call Turb_Mod_Alias_K_Eps_Zeta_F(turb, kin, eps, zeta, f22)
+  call Turb_Mod_Alias_Heat_Fluxes (turb, ut, vt, wt)
   call Solver_Mod_Alias_System    (sol, a, b)
 
   call Time_And_Length_Scale(grid, turb)
@@ -129,7 +130,7 @@
         turb % p_kin(c1) = p_kin_int * exp(-1.0 * ebf) + p_kin_wf  &
                            * exp(-1.0 / ebf)
 
-        fa = min(p_kin_wf * exp(-1.0 / ebf)/turb % p_kin(c1) , 1.0)
+        fa = min( p_kin_wf * exp(-1.0 / ebf) / (turb % p_kin(c1) + TINY), 1.0)
 
         eps % n(c1) = (1.0 - fa)**0.5 * eps_int + fa**0.5 * eps_wf
 
@@ -146,6 +147,18 @@
         end if ! rough_walls 
 
         if(turb % y_plus(c1) > 3) then
+          if(buoyancy) then
+             turb % g_buoy(c) = -flow % beta           &
+                              * (grav_x * ut % n(c) +  &
+                                 grav_y * vt % n(c) +  &
+                                 grav_z * wt % n(c))   &
+                              * flow % density(c)
+             b(c) = b(c) + max(0.0, turb % g_buoy(c) * grid % vol(c))
+             a % val(a % dia(c)) = a % val(a % dia(c))    &
+                            + max(0.0,-turb % g_buoy(c)   &
+                            * grid % vol(c)               &
+                            / (kin % n(c) + TINY))
+          end if
 
           ! Adjusting coefficient to fix eps value in near wall calls
           do j = a % row(c1), a % row(c1 + 1) - 1
