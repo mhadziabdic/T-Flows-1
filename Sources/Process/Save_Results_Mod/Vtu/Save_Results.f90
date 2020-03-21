@@ -559,15 +559,15 @@
   call Save_Scalar(grid, IN_4, IN_5, "WallDistance", plot_inside,            &
                                      grid % wall_dist(-grid % n_bnd_cells),  &
                                      f8, f9)
-  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaMax", plot_inside,        &
-                                     turb % h_max(-grid % n_bnd_cells),  &
-                                     f8, f9)
-  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaMin", plot_inside,        &
-                                     turb % h_min(-grid % n_bnd_cells),  &
-                                     f8, f9)
-  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaWall", plot_inside,       &
-                                     turb % h_w  (-grid % n_bnd_cells),  &
-                                     f8, f9)
+!  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaMax", plot_inside,        &
+!                                     turb % h_max(-grid % n_bnd_cells),  &
+!                                     f8, f9)
+!  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaMin", plot_inside,        &
+!                                     turb % h_min(-grid % n_bnd_cells),  &
+!                                     f8, f9)
+!  call Save_Scalar(grid, IN_4, IN_5, "CellDeltaWall", plot_inside,       &
+!                                     turb % h_w  (-grid % n_bnd_cells),  &
+!                                     f8, f9)
 
   !----------------------!
   !   Save user arrays   !
