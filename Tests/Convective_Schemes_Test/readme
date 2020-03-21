@@ -1,0 +1,4 @@
+You need to unzip step.neu.gz file by running
+the following command from the command line:
+gunzip step.neu.gz
+
