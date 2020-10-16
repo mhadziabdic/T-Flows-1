@@ -60,7 +60,7 @@
 
   ! Set the name for coordinate file
   call File_Mod_Set_Name(coord_name, extension='.1d')
-  call File_Mod_Open_File_For_Writing(coord_name, fu)
+  call File_Mod_Open_File_For_Reading(coord_name, fu)
 
   ! Read the number of searching intervals
   read(fu,*) n_prob
@@ -142,13 +142,13 @@
             vm_p(i)   = vm_p(i) + u_rad
             wm_p(i)   = wm_p(i) + w % n(c)
 
-            if(turbulence_model .eq. K_EPS) then
+            if(turb % model .eq. K_EPS) then
               v1_p(i) = v1_p(i) + kin % n(c)
               v2_p(i) = v2_p(i) + eps % n(c)
               v3_p(i) = v3_p(i) + turb % vis_t(c) / flow % viscosity(c)
             end if
 
-            if(turbulence_model .eq. K_EPS_ZETA_F) then
+            if(turb % model .eq. K_EPS_ZETA_F) then
               v1_p(i)   = v1_p(i) + kin % n(c)
               v2_p(i)   = v2_p(i) + eps % n(c)
               v3_p(i)   = v3_p(i) + turb % vis_t(c) / flow % viscosity(c)
