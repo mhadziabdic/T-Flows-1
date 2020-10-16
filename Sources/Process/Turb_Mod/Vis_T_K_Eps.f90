@@ -63,7 +63,7 @@
     kin_vis = flow % viscosity(c) / flow % density(c)
 
     re_t =  flow % density(c) * kin % n(c)**2  &
-         / (flow % viscosity(c) * eps % n(c))
+         / (flow % viscosity(c) * eps % n(c) + TINY)
 
     y_star = (kin_vis * eps % n(c))**0.25 * grid % wall_dist(c)/kin_vis
 
@@ -72,8 +72,9 @@
 
     f_mu = min(1.0,f_mu)
 
-    turb % vis_t(c) = f_mu * c_mu * flow % density(c) * kin % n(c)**2  &
-                    / eps % n(c)
+    turb % vis_t(c) = min(f_mu * c_mu * flow % density(c) * kin % n(c)**2  &
+                      / (eps % n(c) + TINY), 0.6*kin % n(c)/(sqrt(6.0)*c_mu*flow % shear(c))) 
+
   end do
 
   do s = 1, grid % n_faces
